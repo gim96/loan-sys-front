@@ -203,7 +203,7 @@ const handleCreate = (item) => {
     });
 };
 
-const handleUpdate = (item) => {
+const handleUpdate = (item, removedImages) => {
 
     // console.log(currentItem._id);
     const data = {
@@ -217,8 +217,17 @@ const handleUpdate = (item) => {
       images:item.images
     };
 
+    const imgUrls = removedImages
+    // var fileRef = storage.refFromURL(fileUrl);
+
     axios.patch(`${getSource()}/items?id=${currentItem._id}`, data, token_header)
     .then((resp) => {
+
+        imgUrls.map((url) => {
+            firebase.firestore().refFromURL(url).delete()
+            
+        })
+        // firebase.firestore()
         getData();
         setOpenEdit(false); 
     })

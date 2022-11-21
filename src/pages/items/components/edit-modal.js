@@ -51,8 +51,8 @@ export default function EditModal({
       const filteredImages = selectedImages.filter((img) => img !== image)
       console.log(filteredImages)
       setImages(filteredImages)
-      const removedImages = selectedImages.filter((img) => img === image)
-      setRemovedImages(removedImages)
+      const _removedImages = selectedImages.filter((img) => img === image)
+      setRemovedImages(_removedImages)
     }
 
     const handleSave = () => {
@@ -66,7 +66,7 @@ export default function EditModal({
         status:status,
         images:selectedImages,
       };
-      handleUpdate(item);
+      handleUpdate(item, removedImages);
     };
 
     const options = [
