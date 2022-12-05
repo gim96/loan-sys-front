@@ -133,7 +133,9 @@ const handleUpdate = (item) => {
       phone:item.phone,
       name: item.name,
       address:item.address,
+      idPhoto:item.idPhoto,
     };
+    
     axios.patch(`${getSource()}/customers?cusId=${currentItem._id}`, data, token_header)
     .then((resp) => {
         getData();

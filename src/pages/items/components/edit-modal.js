@@ -64,7 +64,7 @@ export default function EditModal({
         type:type,
         price:price,
         status:status,
-        images:selectedImages,
+        images:images,
       };
       handleUpdate(item, removedImages);
     };

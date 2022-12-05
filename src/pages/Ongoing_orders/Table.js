@@ -163,7 +163,7 @@ const handleViewModal = (item) => {
                               {item.orderId}
                           </td>
                           <td>{item.customerPhone}</td>
-                          <td align='left'>{item.orderType}</td>
+                          <td align='left'>{item.orderType === 'rent' ? 'Rent' : 'Booking'}</td>
                           <td align='right'>{Math.round(item.subTotal).toFixed(2)}</td>
                           <td>{moment(item.createdAt).format('LLL')}</td>
                           <td>
@@ -173,9 +173,9 @@ const handleViewModal = (item) => {
                             <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
                                 <CheckCircleIcon fontSize="inherit" />
                             </IconButton>
-                            {/* <IconButton aria-label="delete" size="large" onClick={() => handleDelete(i)}>
+                            <IconButton aria-label="delete" size="large" onClick={() => handleDelete(i)}>
                                 <DeleteIcon fontSize="inherit" />
-                            </IconButton> */}
+                            </IconButton>
                           </td>
                         </tr>
                       ))}

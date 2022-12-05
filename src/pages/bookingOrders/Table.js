@@ -26,20 +26,19 @@ import axios from "axios";
 import { getSource } from "../db/server";
 import {token_header} from "../../utils/tokenHeader";
 import moment from "moment";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Tables = function ({
-  customers, setCustomers, setLoading,
-   handleCurrentItem, handleCurrentItemDelete,
-    activeCount, setOpenCreate, setOpenView
-  }) {
+  orders, setOrders, setLoading, 
+  handleCurrentItem, handleCurrentItemDelete, activeCount, setOpenCreate, setOpenView, handleView}) {
 
 const [selectedItem, setSelectedItem] = useState([]); 
 
 useEffect(() => {
-    if (customers) {
-      console.log(customers)
+    if (orders) {
+      console.log(orders)
     }
-}, [customers])
+}, [orders])
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [firstTable] = useState(mock.firstTable);
@@ -62,12 +61,12 @@ useEffect(() => {
   }
 
   const handleEdit = (i) => {
-     const currItem = customers[i];
+     const currItem = orders[i];
      handleCurrentItem(currItem);
   }; 
   
   const handleDelete = (i) => {
-    const currItem = customers[i];
+    const currItem = orders[i];
     handleCurrentItemDelete(currItem);
  };    
 
@@ -100,11 +99,16 @@ const getPageData = (number) => {
   setCurrentPage(number);
   axios
     .get(
-      `${getSource()}/items?page=${number}&limit=20`,token_header)
+      `${getSource()}/orders/pending?page=${number}&limit=${20}`,token_header)
     .then((resp) => {
-      setCustomers(resp.data.payload);
+      setOrders(resp.data.payload);
       setLoading(false);
     });
+};
+
+const handleViewModal = (item) => {
+  handleView(item);
+  
 };
 
   return (
@@ -115,11 +119,11 @@ const getPageData = (number) => {
             <Col>
               {/* <Widget> */}
                 <div className={s.tableTitle}>
-                  <div className="headline-2">Items details</div>
+                  <div className="headline-2">Order details</div>
                   <div className="d-flex">
-                    <IconButton aria-label="delete" size="large" onClick={() => setOpenCreate(true)}>
+                    {/* <IconButton aria-label="delete" size="large" onClick={() => setOpenCreate(true)}>
                         <AddCircleIcon fontSize="inherit" />
-                    </IconButton>
+                    </IconButton> */}
                    
                   </div>
                 </div>
@@ -137,36 +141,42 @@ const getPageData = (number) => {
                           <label for="checkbox100"/>
                         </div>
                       </th>
-                      <th className="w-10">Description</th>
-                      <th className="w-25">Amount</th>
-                      <th className="w-20">Date</th>
+                      <th className="w-5">Order Id</th>
+                      <th className="w-10">Phone</th>
+                      <th className="w-10">Order Type</th>
+                      <th className="w-10">Amount</th>
+                      <th className="w-10">Date</th>
+                      <th className="w-20" align="right">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {customers
+                    {orders
                       .map((item, i) => (
+                       
                         <tr key={uuidv4()}>
-                          <td>
+                          <td >
                             <div className="checkbox checkbox-primary">
                               {currentPage < 2 ? i+1 : (i + 1 + 20 * currentPage - 20)}
                             </div>
                           </td>
-            
-                          <td>{item.description}</td>
-                          <td>{item.amount}.00</td>
+                          <td>
+                              {item.orderId}
+                          </td>
+                          <td>{item.customerPhone}</td>
+                          <td align='left'>{item.orderType === 'rent' ? 'Rent' : 'Booking'}</td>
+                          <td align='right'>{Math.round(item.subTotal).toFixed(2)}</td>
                           <td>{moment(item.createdAt).format('LLL')}</td>
                           <td>
-                            {/* <IconButton aria-label="delete" size="large" onClick={() => setOpenView(true)}>
+                            <IconButton aria-label="delete" size="large" onClick={() => handleViewModal(item)}>
                                 <VisibilityIcon fontSize="inherit" />
-                            </IconButton> */}
+                            </IconButton>
                             <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
-                                <EditIcon fontSize="inherit" />
+                                <CheckCircleIcon fontSize="inherit" />
                             </IconButton>
                             <IconButton aria-label="delete" size="large" onClick={() => handleDelete(i)}>
                                 <DeleteIcon fontSize="inherit" />
                             </IconButton>
                           </td>
-                          
                         </tr>
                       ))}
                     </tbody>
@@ -215,29 +225,7 @@ const getPageData = (number) => {
                       </td>
                     </tr>
                   </table>
-                  {/* <Pagination className="pagination-borderless" aria-label="Page navigation example">
-                    <PaginationItem disabled={firstTableCurrentPage <= 0}>
-                      <PaginationLink
-                        onClick={e => setFirstTablePage(e, firstTableCurrentPage - 1)}
-                        previous
-                        href="#top"
-                      />
-                    </PaginationItem>
-                    {[...Array(firstTablePagesCount)].map((page, i) =>
-                      <PaginationItem active={i === firstTableCurrentPage} key={i}>
-                        <PaginationLink onClick={e => setFirstTablePage(e, i)} href="#top">
-                          {i + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )}
-                    <PaginationItem disabled={firstTableCurrentPage >= firstTablePagesCount - 1}>
-                      <PaginationLink
-                        onClick={e => setFirstTablePage(e, firstTableCurrentPage + 1)}
-                        next
-                        href="#top"
-                      />
-                    </PaginationItem>
-                  </Pagination> */}
+                  
                 </div>
               {/* </Widget> */}
             </Col>

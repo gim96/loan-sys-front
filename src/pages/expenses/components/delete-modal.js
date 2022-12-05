@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, CardText } from "reactstrap";
+import { Col, Row, Modal, ModalHeader, ModalBody, Button, CardText } from "reactstrap";
 import ErrorIcon from '@mui/icons-material/Error';
 
 export default function DeleteModal({openDelete, setOpenDelete, currentItem, handleDelete}) {

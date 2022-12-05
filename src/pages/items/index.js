@@ -219,15 +219,9 @@ const handleUpdate = (item, removedImages) => {
 
     const imgUrls = removedImages
     // var fileRef = storage.refFromURL(fileUrl);
-
+    console.log(data)
     axios.patch(`${getSource()}/items?id=${currentItem._id}`, data, token_header)
     .then((resp) => {
-
-        imgUrls.map((url) => {
-            firebase.firestore().refFromURL(url).delete()
-            
-        })
-        // firebase.firestore()
         getData();
         setOpenEdit(false); 
     })

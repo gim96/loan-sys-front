@@ -9,74 +9,34 @@ import {SketchPicker} from "react-color";
 
 export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
 
-    const [itemCode, setItemCode] = useState("");
-    const [name, setName] = useState("");
-    const [color, setColor] = useState("");
-    const [size, setSize] = useState("");
-    const [type, setType] = useState("");
-    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState("");
+    const [amount, setAmount] = useState("");
 
     const handleSave = () => {
      
       const item = {
-        itemCode:itemCode,
-        name:name,
-        color:color,
-        size:size,
-        type:type,
-        price:price,
-        status:1,
+        description:description,
+        amount:amount,
       };
 
       handleCreate(item);
-      setItemCode("");
-      setName("");
-      setColor("");
-      setSize("");
-      setType("");
-      setPrice(0);
-
+   
     };
 
 
     return(
         <Modal size='md' isOpen={openCreate}>
-            <ModalHeader toggle={() => setOpenCreate(false)}><EditIcon />&nbsp; Add Customer details</ModalHeader>
+            <ModalHeader toggle={() => setOpenCreate(false)}><EditIcon />&nbsp; Add Expense details</ModalHeader>
             <ModalBody className="p-5" > 
             <Row>
                 <Col >
-                    Item Code
-                    <Input type="number" onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
+                    Description
+                    <Input type="text" onChange={(e) => setDescription(e.target.value)} value={description} />
                     <br />
-                    Name
-                    <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
+                    Amount
+                    <Input type="number" onChange={(e) => setAmount(e.target.value)} value={amount} />
                     <br />
-               
-                    Size
-                    <Input type="select" onChange={(e) => setSize(e.target.value)} value={size}>
-                      <option>S</option> 
-                      <option>M</option> 
-                      <option>L</option> 
-                      <option>XL</option> 
-                      <option>XXL</option>  
-                    </Input> 
-                    <br />
-                    Type
-                    <Input type="select" onChange={(e) => setType(e.target.value)} value={type}>
-                      <option>Sarong</option> 
-                      <option>Blazor</option> 
-                      <option>Shirt</option> 
-                      <option>Trouser</option> 
-                      <option>Waistcoat</option> 
-                      <option>Accessory</option>  
-
-                    </Input> 
-                    <br />
-                    Color
-                    <Input type='color' className="w-50" onChange={(e) => setColor(e.target.value)} />
-                    <br />
-                    Price
-                    <Input type="number" onChange={(e) => setPrice(e.target.value)} value={price} />
+                   
                 </Col>
             </Row>
             <hr />

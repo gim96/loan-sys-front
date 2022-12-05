@@ -59,6 +59,7 @@ const Expenses = function () {
         const arr = [];
         const items = resp.data.payload; 
         items.map((item) => {
+            
             arr.push(item.itemCode);
         })
         setItemCodes(arr);
@@ -113,20 +114,17 @@ const handleSearch = () => {
 const handleCreate = (item) => {
 
     const data = {
-      itemCode:item.itemCode,
-      name: item.name,
-      color:item.color,
-      type:item.type,
-      size:item.size, 
-      price:item.price,
-      status:1,  
+        description: item.description,
+        amount: item.amount,
     };
-    axios.post(`${getSource()}/items`, data, token_header)
+    axios.post(`${getSource()}/expenses`, data, token_header)
     .then((resp) => {
+
         getData();
         setOpenCreate(false); 
     })
     .catch((err) => { 
+    
       console.log(err);
     });
 };

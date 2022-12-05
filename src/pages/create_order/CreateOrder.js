@@ -5,8 +5,6 @@ import {  Col, Input, Row, Modal,
 import Widget from "../../components/Widget/Widget.js";
 import moment from "moment";
 import { getSource } from "../../pages/db/server";
-
-import { ButtonGroup, ModalTitle } from "react-bootstrap";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -52,7 +50,7 @@ class Typography extends React.Component {
       description: "",
       brand: "",
       unitPrice: "",
-      quantity: "",
+      quantity: "1",
       amount: "",
       // user: [],
 
@@ -72,7 +70,9 @@ class Typography extends React.Component {
       items: [],
       loading: false,
       showPhoto: false,
-      show:false
+      show:false,
+      orderNo:0,
+      orderType:'',
     };
   }
 
@@ -85,6 +85,15 @@ class Typography extends React.Component {
     .catch((err) => {
         console.log(err);
     })
+    axios.get(`${getSource()}/orders/count`, token_header)
+    .then((resp) => {
+      this.setState({orderNo:(resp.data.payload.count + 1000 + 1)});
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+    
+
     axios.get(`${getSource()}/customers/active-phone`, token_header)
     .then((resp) => {
     
@@ -179,9 +188,9 @@ class Typography extends React.Component {
           items.push({
             itemCode:this.state.itemCode,
             description:this.state.currentItem.name,
-            unit_price:this.state.currentStock.rentalPrice,
+            unit_price:this.state.currentItem.price,
             quantity:this.state.quantity,
-            amount:this.state.currentStock.rentalPrice * this.state.quantity
+            amount:this.state.currentItem.price * this.state.quantity
           });
   
           let tot = 0;
@@ -212,25 +221,31 @@ class Typography extends React.Component {
   saveOrder = () => {
 
     const data = {
-      orderId:this.state.itemCode,
+      orderId:this.state.orderNo,
       customerPhone: this.state.phone,
-      orderType:'booking',
+      orderType:this.state.orderType,
       status:1,
       items:this.state.items,
       amount:this.state.total,
       advance:this.state.cash,
-      subTotal:this.state.total * 1 - this.state.discount * 1
+      subTotal:this.state.total * 1 - this.state.discount * 1, 
     };
-    console.log(data);
-    axios.post(`${getSource()}/orders`, data, token_header)
-    .then((resp) => {
-      console.log(resp);
-        // getData();
-        // setOpenCreate(false); 
-    })
-    .catch((err) => { 
-      console.log(err);
-    });
+    
+    if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
+       
+      axios.post(`${getSource()}/orders`, data, token_header)
+        .then((resp) => {
+          console.log(resp);
+          // getData();
+          // setOpenCreate(false); 
+        })
+        .catch((err) => { 
+          console.log(err);
+       });
+    } else {
+      alert('Required fields.!')
+    }
+    
       
   };
 
@@ -244,7 +259,6 @@ class Typography extends React.Component {
       $("#unitprice").focus();
     }
   };
-
   goNextAddBtn = (event) => {
     if (event.key === "Enter") {
       $("#addbtn").focus();
@@ -315,7 +329,7 @@ class Typography extends React.Component {
                       <Card className="p-4 pb" style={{height:'calc(100% - 2.2rem)'}}> 
 
                       <label className="form-label">Bill no</label>
-                      <p>{this.state.orderId * 1 + 1}</p>
+                      <p>{this.state.orderNo}</p>
                   
                       <br />
                       <Autocomplete
@@ -356,6 +370,8 @@ class Typography extends React.Component {
                       
                       <br />
                       <TextField 
+                        hidden={true}
+                        
                         className="w-100"
                         id="outlined-basic" 
                         // variant="standard"  
@@ -369,7 +385,12 @@ class Typography extends React.Component {
                         }
                         // onKeyUp={this.handleAmount}
                       />
-      
+                        <br />
+                        <select className="form-control" onChange={(e) => this.setState({orderType:e.target.value})}>
+                          <option value=''>--select---</option>
+                          <option value='rent'>Rent</option>
+                          <option value='booking'>Booking</option>
+                        </select>
                         <br />
                         <br />
                         <Button
@@ -415,13 +436,14 @@ class Typography extends React.Component {
                           </Col>
                         </Row>
                       </ListGroupItem>
+                      <br />
                       </ListGroup>
                       {/*  */}
                     <ListGroup flush>
                     <ListGroupItem>
                       <Row>
                           <Col>Item Code</Col>
-                          <Col align='right'>{this.state.currentItem.itemCode}</Col>
+                          <Col align='right'>{this.state.currentItem.itemCode && this.state.currentItem.itemCode}</Col>
                         </Row>
                       </ListGroupItem>
                       <ListGroupItem>
@@ -464,13 +486,13 @@ class Typography extends React.Component {
                     <ListGroupItem>
                       <Row>
                           <Col>Stock</Col>
-                          <Col align='right'>{this.state.currentStock.quantity}</Col>
+                          {/* <Col align='right'>{this.state.currentStock.quantity}</Col> */}
                         </Row>
                       </ListGroupItem>
                       <ListGroupItem>
                       <Row>
                           <Col>Rental Price</Col>
-                          <Col align='right'>{this.state.currentStock.rentalPrice}.00 LKR</Col>
+                          {/* <Col align='right'>{this.state.currentStock.rentalPrice}.00 LKR</Col> */}
                         </Row>
                       </ListGroupItem>
                       </ListGroup>
@@ -654,6 +676,7 @@ class Typography extends React.Component {
                               <button
                                 className="btn btn-lg btn-primary"
                                 onClick={this.saveOrder}
+                                
                               >
                                 Create order
                               </button>

@@ -26,6 +26,7 @@ import Expenses from "../../pages/expenses/index.js";
 import Customers from "../../pages/customers/index.js";
 import Suppliers from "../../pages/suppliers/index.js";
 import OngoingOrders from "../../pages/Ongoing_orders/index.js";
+import BookingOrders from "../../pages/bookingOrders/index.js";
 
 class Layout extends React.Component {
   static propTypes = {
@@ -60,6 +61,7 @@ class Layout extends React.Component {
               <Route path="/menu/customers" exact component={Customers} />
               <Route path="/menu/suppliers" exact component={Suppliers} />
               <Route path="/menu/ongoing-orders" exact component={OngoingOrders} />
+              <Route path="/menu/booking-orders" exact component={BookingOrders} />
               {/* <Route
                 path="/menu/viewOrder/:orderId"
                 exact

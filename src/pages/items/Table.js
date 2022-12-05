@@ -174,7 +174,7 @@ const getPageData = (number) => {
                           </td>
                           <td>{item.price}.00</td>
                           <td>
-                            {item.status === 0 ? (<Badge color='danger'>Rented</Badge>) : (item.status === 1 ? (<Badge color='success'>In-Store</Badge>) : (<Badge color='warning'>Booked</Badge>))}
+                            {item.status === 0 ? (<Badge color='danger'>Out of Stock</Badge>) : (<Badge color='success'>In Stock</Badge>)}
                           </td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>
