@@ -219,12 +219,12 @@ class Typography extends React.Component {
   };
 
   saveOrder = () => {
-
+    const curr_Status =  this.state.orderType === 'rent' ? 2 : 1
     const data = {
       orderId:this.state.orderNo,
       customerPhone: this.state.phone,
       orderType:this.state.orderType,
-      status:1,
+      status:curr_Status,
       items:this.state.items,
       amount:this.state.total,
       advance:this.state.cash,

@@ -53,7 +53,7 @@ const OngoingOrders = function () {
 
   async function getData() {
 
-    axios.get(`${getSource()}/orders/pending?page=1&limit=20`, token_header)
+    axios.get(`${getSource()}/orders/booking?page=1&limit=20`, token_header)
     .then((resp) => {
         setOrders(resp.data.payload);
         setAllOrders(resp.data.payload);
@@ -140,6 +140,7 @@ const handleUpdate = (item) => {
     // console.log(currentItem._id);
     const data = {
       status:2,
+      orderType:'rent'
     };
     axios.patch(`${getSource()}/orders?id=${currentOrder._id}`, data, token_header)
     .then((resp) => {
