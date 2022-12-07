@@ -233,8 +233,14 @@ const handleUpdate = (item, removedImages) => {
 const handleDelete = () => {
     axios.delete(`${getSource()}/items?id=${currentItem._id}`, token_header)
     .then((resp) => {
-        getData();
-        setOpenDelete(false); 
+        if (resp.data.success === true) {
+            getData();
+            setOpenDelete(false); 
+        } else {
+            setOpenDelete(false); 
+            alert(resp.data.message);
+        }
+        
     })
     .catch((err) => { 
       console.log(err);

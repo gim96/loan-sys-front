@@ -236,6 +236,11 @@ class Typography extends React.Component {
       axios.post(`${getSource()}/orders`, data, token_header)
         .then((resp) => {
           console.log(resp);
+          if (data.orderType === 'rent') {
+            window.location.href = '/#/menu/ongoing-orders'
+          } else {
+            window.location.href = '/#/menu/booking-orders'
+          }
           // getData();
           // setOpenCreate(false); 
         })
@@ -558,13 +563,15 @@ class Typography extends React.Component {
                           <td width="45%">Discount</td>
                           <td width="10%">&nbsp;</td>
                           <td width="45%" align="right">
-                            Cash
+                           Advance / Cash
                           </td>
                         </tr>
                         <tr>
                           <td>
                             <input
                               type="number"
+                              min={0}
+                              // max=''
                               className="form-control"
                               onChange={(e) =>
                                 this.setState({ discount: e.target.value })
@@ -576,6 +583,7 @@ class Typography extends React.Component {
                           <td align="right">
                             <input
                               type="number"
+                              min={0}
                               className="form-control"
                               onChange={(e) =>
                                 this.setState({ cash: e.target.value })

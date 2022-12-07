@@ -125,6 +125,7 @@ export default function EditModal({
         <ModalHeader toggle={() => {
           setCurrentItem([])
           setOpenEdit(false)
+          setImages([])
         }}>
           <EditIcon />&nbsp; Edit Item details
         </ModalHeader>
@@ -211,7 +212,7 @@ export default function EditModal({
           <Button color="secondary" onClick={() => {
             setCurrentItem([])
             setOpenEdit(false)
-
+            setImages([])
           }}>
             Cancel
           </Button>

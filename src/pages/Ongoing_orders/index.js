@@ -139,7 +139,8 @@ const handleUpdate = (item) => {
 
     // console.log(currentItem._id);
     const data = {
-      status:2,
+      status:0,
+      orderType:'rent',
     };
     axios.patch(`${getSource()}/orders?id=${currentOrder._id}`, data, token_header)
     .then((resp) => {
@@ -153,9 +154,7 @@ const handleUpdate = (item) => {
 
 const handleDelete = () => {
 
-    const data = { status:3 };
-
-    axios.patch(`${getSource()}/orders?id=${currentOrder._id}`, data, token_header)
+    axios.delete(`${getSource()}/orders?id=${currentOrder._id}`, token_header)
     .then((resp) => {
         getData();
         setOpenDelete(false); 

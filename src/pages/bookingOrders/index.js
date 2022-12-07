@@ -154,9 +154,9 @@ const handleUpdate = (item) => {
 
 const handleDelete = () => {
 
-    const data = { status:3 };
+    const data = { status: 0};
 
-    axios.patch(`${getSource()}/orders?id=${currentOrder._id}`, data, token_header)
+    axios.delete(`${getSource()}/orders?id=${currentOrder._id}`, token_header)
     .then((resp) => {
         getData();
         setOpenDelete(false); 

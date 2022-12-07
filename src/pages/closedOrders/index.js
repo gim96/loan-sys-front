@@ -91,7 +91,6 @@ const handleView = (item) => {
 const handleCurrentItemDelete = (item) => {
     setCurrentOrder(item)
     setOpenDelete(true);
-   
 };
 
 const handleSearch = () => {
