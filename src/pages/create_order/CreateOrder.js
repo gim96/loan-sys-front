@@ -108,7 +108,8 @@ class Typography extends React.Component {
     .then((resp) => {
         const arr = [];
         const items = resp.data.payload; 
-        items.map((item) => {
+        const actualItems = items.filter((item) => item.status === 1);
+        actualItems.map((item) => {
             arr.push(item.itemCode);
         })
         this.setState({itemCodes:arr});

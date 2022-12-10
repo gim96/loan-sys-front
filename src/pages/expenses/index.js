@@ -152,7 +152,7 @@ const handleUpdate = (item) => {
 };
 
 const handleDelete = () => {
-    axios.delete(`${getSource()}/items?id=${currentItem._id}`, token_header)
+    axios.delete(`${getSource()}/expenses?id=${currentItem._id}`, token_header)
     .then((resp) => {
         getData();
         setOpenDelete(false); 
