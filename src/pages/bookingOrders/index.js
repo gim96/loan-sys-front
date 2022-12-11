@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, 
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+} from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 // import DatePicker from "react-datepicker";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -16,6 +21,11 @@ import ViewModal from "./components/view-modal.js";
 import EditModal from "./components/edit-modal.js";
 import DeleteModal from "./components/delete-modal.js";
 import CreateModal from "./components/create-modal.js";
+import { Stack } from "@mui/material";
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import Calendar from "../../components/DateRange/Calendar.js";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,7 +74,7 @@ const OngoingOrders = function () {
         console.log(err);
     })
 
-    axios.get(`${getSource()}/orders/booking-ids`, token_header)
+    axios.get(`${getSource()}/orders/ids?type=booking`, token_header)
     .then((resp) => {
         let arr = []
         resp.data.payload.map((data) => {
@@ -108,11 +118,17 @@ const handleCurrentItemDelete = (item) => {
    
 };
 
-const handleSearch = () => {
+const [selectionRange, setSelectionRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection',
+});
 
-    if (codeSearch !== "") {
+const handleSearch = (selected_id) => {
+    console.log('this is search')
+    if (selected_id !== "") {
 
-        axios.get(`${getSource()}/orders/search?orderId=${selectedId}`, token_header)
+        axios.get(`${getSource()}/orders/search?orderId=${selected_id}`, token_header)
         .then((resp) => {
             console.log(resp)
             if (resp.data.payload.length > 0) {
@@ -195,6 +211,17 @@ const getItems = async(id) => {
     })
 };
 
+const [dropdownOpen, setDropdownOpen] = useState(false);
+const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+const handleDate = (date) => {
+    setSelectionRange({
+        startDate:date.startDate,
+        endDate: date.endDate,
+        key: "compare"
+    })
+};
+
     return (
         <div>
              <Row>
@@ -202,29 +229,44 @@ const getItems = async(id) => {
                     <Card className="p-3 pl-3">
                         <Row>
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={2} md={2} xs={2}></Col>
-                            <Col lg={4} md={4} xs={12} align='right'>
-                                <Autocomplete
-                                    id="free-solo-demo"
-                                    freeSolo
-                                    options={orderIds.map((option) => option)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Search by Order Id"
-                                            margin="normal"
-                                            variant="outlined"
-                                            placeholder="Search by Phone no"
-                                            onChange={(e) => setSelectedId(e.target.value)}
-                                            onSelect={(e) => setSelectedId(e.target.value)}
-                                        />
-                                    )}
-                                />
+                            <Col lg={4} md={4} xs={12} className='pt-3' align='right'>
+                                <Dropdown isOpen={dropdownOpen} toggle={toggle} direction='down'>
+                                    <DropdownToggle caret className='pl-4 pr-4 pt-3 pb-3'>{moment(new Date(selectionRange.startDate)).format('L')} - {moment(new Date(selectionRange.startDate)).format('L')}</DropdownToggle>
+                                    <DropdownMenu>
+                                    <DropdownItem header>
+                                        <Calendar onChange={(date) => handleDate(date)} />
+                                    </DropdownItem>
+                                </DropdownMenu>
+                                </Dropdown>
                             </Col>
-                            <Col lg={2} md={2} xs={2} className="pt-3">
-                                <Button className='p-3 float-center' color='primary' onClick={handleSearch}>
-                                    search
-                                </Button>
+                            <Col lg={4} md={4} xs={12} align='right'>
+                                <Stack direction='row' spacing={1}>
+                                    <div className="w-100">
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            options={orderIds.map((option) => option)}
+                                            renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Search by Order Id"
+                                                margin="normal"
+                                                variant="outlined"
+                                                placeholder=" &#128269;"
+                                                onChange={(e) => handleSearch(e.target.value)}
+                                                onSelect={(e) => handleSearch(e.target.value)}
+                                            />
+                                            )}
+                                        />
+                                    </div>
+                                    {/* <div className="pt-3">
+                                        <Button className='p-3 float-center' color='primary' onClick={handleSearch}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                            </svg>
+                                        </Button>
+                                    </div> */}
+                                </Stack>
                             </Col>
                         </Row>
                     </Card>

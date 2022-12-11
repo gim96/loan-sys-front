@@ -48,6 +48,7 @@ const OngoingOrders = function () {
   const [currentOrder, setCurrentOrder] = useState([]);
   const [activeCount, setActiveCount] = useState(0);
   const [activePhone, setActivePhone] = useState([]);
+  const [orderIds, setOrderIds] = useState([]);
 
     const [stockItem, setStockItem] = useState([]);
 
@@ -57,6 +58,19 @@ const OngoingOrders = function () {
     .then((resp) => {
         setOrders(resp.data.payload);
         setAllOrders(resp.data.payload);
+      
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+
+    axios.get(`${getSource()}/orders/ids?type=ongoing`, token_header)
+    .then((resp) => {
+        let arr = []
+        resp.data.payload.map((data) => {
+            arr.push(data.orderId)
+        })
+        setOrderIds(arr);
         setLoading(false);
     })  
     .catch((err) => {
@@ -94,11 +108,11 @@ const handleCurrentItemDelete = (item) => {
    
 };
 
-const handleSearch = () => {
+const handleSearch = (selected_id) => {
 
-    if (codeSearch !== "") {
+    if (selected_id !== "") {
 
-        axios.get(`${getSource()}/orders/search?type=pending&orderId=${codeSearch}`, token_header)
+        axios.get(`${getSource()}/orders/search?type=pending&orderId=${selected_id}`, token_header)
         .then((resp) => {
             if (resp.data.payload.length > 0) {
                 setOrders(resp.data.payload);
@@ -185,22 +199,34 @@ const getItems = async(id) => {
                     <Card className="p-3 pl-3">
                         <Row>
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={2} md={2} xs={2}></Col>
+                            <Col lg={4} md={4} xs={12}></Col>
                             <Col lg={4} md={4} xs={12} align='right'>
-                                <TextField
+                                {/* <TextField
                                     label="Item Code"
                                     margin="normal"
                                     variant="outlined"
                                     placeholder="Search by Phone no"
                                     onChange={(e) => setCodeSearch(e.target.value)}
                                     type='number'
+                                /> */}
+                                <Autocomplete
+                                    id="free-solo-demo"
+                                    freeSolo
+                                    options={orderIds.map((option) => option)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Search by Order Id"
+                                            margin="normal"
+                                            variant="outlined"
+                                            placeholder=" &#128269;"
+                                            onChange={(e) => handleSearch(e.target.value)}
+                                            onSelect={(e) => handleSearch(e.target.value)}
+                                        />
+                                    )}
                                 />
                             </Col>
-                            <Col lg={2} md={2} xs={2} className="pt-3">
-                                <Button className='p-3 float-center' color='primary' onClick={handleSearch}>
-                                    search
-                                </Button>
-                            </Col>
+                           
                         </Row>
                     </Card>
                 </Col>

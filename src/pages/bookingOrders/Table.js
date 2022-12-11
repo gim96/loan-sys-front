@@ -188,7 +188,9 @@ const handleViewModal = (item) => {
                       </td>
                       <td width="40%" align="right">
                         {/* <nav aria-label="Page navigation example"> */}
-                        <ul class="pagination">
+                        {
+                          orders && orders.length > 20 &&
+                          <ul class="pagination">
                           <li>
                             <button
                               class="page-link"
@@ -221,6 +223,8 @@ const handleViewModal = (item) => {
                             </button>
                           </li>
                         </ul>
+                        }
+                       
                         {/* </nav> */}
                       </td>
                     </tr>
