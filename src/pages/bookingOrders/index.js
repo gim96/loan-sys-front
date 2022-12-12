@@ -61,6 +61,10 @@ const OngoingOrders = function () {
   const [orderIds, setOrderIds] = useState([])
   const [selectedId, setSelectedId] = useState('')
 
+  const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
+  const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
+
+
     const [stockItem, setStockItem] = useState([]);
 
   async function getData() {
@@ -215,12 +219,32 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
 const toggle = () => setDropdownOpen((prevState) => !prevState);
 
 const handleDate = (date) => {
-    setSelectionRange({
-        startDate:date.startDate,
-        endDate: date.endDate,
-        key: "compare"
-    })
+
+    setStartDate(moment(date.startDate).format('YYYY-MM-DD'))
+    setEndDate(moment(date.endDate).format('YYYY-MM-DD'))
+    
 };
+
+const getDataByDate = (startDate, endDate) => {
+    const data = {
+        startDate:startDate,
+        endDate:endDate,
+    };
+     axios.post(`${getSource()}/orders/byDate?type=booking&page=1&limit=20`, data, token_header)
+    .then((resp) => {
+        setOrders(resp.data.payload);
+        // setAllOrders(resp.data.payload);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+
+};
+
+useEffect(() => {
+    getDataByDate(startDate, endDate)
+    console.log("GG")
+}, [startDate, endDate])
 
     return (
         <div>
@@ -231,7 +255,7 @@ const handleDate = (date) => {
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
                             <Col lg={4} md={4} xs={12} className='pt-3' align='right'>
                                 <Dropdown isOpen={dropdownOpen} toggle={toggle} direction='down'>
-                                    <DropdownToggle caret className='pl-4 pr-4 pt-3 pb-3'>{moment(new Date(selectionRange.startDate)).format('L')} - {moment(new Date(selectionRange.startDate)).format('L')}</DropdownToggle>
+                                    <DropdownToggle caret className='pl-4 pr-4 pt-3 pb-3'>{startDate} - {endDate} </DropdownToggle>
                                     <DropdownMenu>
                                     <DropdownItem header>
                                         <Calendar onChange={(date) => handleDate(date)} />
