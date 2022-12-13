@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, 
+    ModalFooter, Button ,     Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,} from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 // import DatePicker from "react-datepicker";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -10,12 +14,14 @@ import { getSource } from "../../pages/db/server";
 import {token_header} from "../../utils/tokenHeader";
 import Skeleton from '@mui/material/Skeleton';
 import axios from "axios";
-import { Grid } from "@material-ui/core";
 import Table from "./Table";
+import { Stack } from "@mui/material";
 import ViewModal from "./components/view-modal.js";
 import EditModal from "./components/edit-modal.js";
 import DeleteModal from "./components/delete-modal.js";
 import CreateModal from "./components/create-modal.js";
+import Calendar from "../../components/DateRange/Calendar.js";
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,7 +55,8 @@ const OngoingOrders = function () {
   const [activeCount, setActiveCount] = useState(0);
   const [activePhone, setActivePhone] = useState([]);
   const [orderIds, setOrderIds] = useState([]);
-
+  const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
+  const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
     const [stockItem, setStockItem] = useState([]);
 
   async function getData() {
@@ -192,6 +199,32 @@ const getItems = async(id) => {
     })
 };
 
+const [dropdownOpen, setDropdownOpen] = useState(false);
+const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+const handleDate = (date) => {
+
+    setStartDate(moment(date.startDate).format('YYYY-MM-DD'))
+    setEndDate(moment(date.endDate).format('YYYY-MM-DD'))
+    
+};
+const handleSearchByDate = () => {
+
+    const data = {
+        startDate:startDate,
+        endDate:endDate,
+    };
+
+    axios.post(`${getSource()}/orders/byDate?type=ongoing&page=1&limit=20`, data, token_header)
+    .then((resp) => {
+        setOrders(resp.data.payload);
+        // setAllOrders(resp.data.payload);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+};
+
     return (
         <div>
              <Row>
@@ -199,16 +232,28 @@ const getItems = async(id) => {
                     <Card className="p-3 pl-3">
                         <Row>
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={4} md={4} xs={12}></Col>
+                            <Col lg={4} md={4} xs={12} className='pt-3' align='right'>
+                                <Stack direction='row' spacing={1}>
+                                    <div>
+                                        <Dropdown isOpen={dropdownOpen} toggle={toggle} direction='down'>
+                                        <DropdownToggle caret className='pl-4 pr-4 pt-3 pb-3'>{startDate} - {endDate} </DropdownToggle>
+                                            <DropdownMenu>
+                                                <DropdownItem header>
+                                                    <Calendar onChange={(date) => handleDate(date)} />
+                                                </DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </div>
+                                    <div>
+                                        <Button className='p-3 float-center' color='primary' onClick={handleSearchByDate}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                            </svg>
+                                        </Button>
+                                    </div>
+                                </Stack>
+                            </Col>
                             <Col lg={4} md={4} xs={12} align='right'>
-                                {/* <TextField
-                                    label="Item Code"
-                                    margin="normal"
-                                    variant="outlined"
-                                    placeholder="Search by Phone no"
-                                    onChange={(e) => setCodeSearch(e.target.value)}
-                                    type='number'
-                                /> */}
                                 <Autocomplete
                                     id="free-solo-demo"
                                     freeSolo
@@ -226,7 +271,6 @@ const getItems = async(id) => {
                                     )}
                                 />
                             </Col>
-                           
                         </Row>
                     </Card>
                 </Col>
@@ -239,17 +283,25 @@ const getItems = async(id) => {
                             isLoading ? <Skeleton height={250} /> : (
                                 <div>
                                      <div className="p-1" style={{ width: '100%' }}>
-                                        <Table 
-                                            orders={orders} 
-                                            setOrders={setOrders}
-                                            setLoading={setLoading}
-                                            handleCurrentItem={handleCurrentItem}
-                                            handleCurrentItemDelete={handleCurrentItemDelete}
-                                            activeCount={activeCount}
-                                            setOpenCreate={setOpenCreate}
-                                            setOpenView={setOpenView}
-                                            handleView={handleView}
-                                        />
+                                       {
+                                            (orders && orders.length > 0 &&
+                                            <Table 
+                                                orders={orders} 
+                                                setOrders={setOrders}
+                                                setLoading={setLoading}
+                                                handleCurrentItem={handleCurrentItem}
+                                                handleCurrentItemDelete={handleCurrentItemDelete}
+                                                activeCount={activeCount}
+                                                setOpenCreate={setOpenCreate}
+                                                setOpenView={setOpenView}
+                                                handleView={handleView}
+                                            />)
+
+                                            ||
+
+                                            <Card className="p-5 text-center" >No data available.!</Card>
+                                        }
+                                       
                                     </div>
                                     <br />
                                 </div>

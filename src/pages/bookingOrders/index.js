@@ -128,29 +128,7 @@ const [selectionRange, setSelectionRange] = useState({
     key: 'selection',
 });
 
-const handleSearch = (selected_id) => {
-    console.log('this is search')
-    if (selected_id !== "") {
 
-        axios.get(`${getSource()}/orders/search?orderId=${selected_id}`, token_header)
-        .then((resp) => {
-            console.log(resp)
-            if (resp.data.payload.length > 0) {
-                setOrders(resp.data.payload);
-            } else {
-                setOrders([]);
-            }
-           
-        })  
-        .catch((err) => {
-            console.log(err);
-        })
-
-    } else {
-        setOrders(allOrders);
-    }
-    
-};
 
 const handleCreate = (item) => {
 
@@ -222,15 +200,42 @@ const handleDate = (date) => {
 
     setStartDate(moment(date.startDate).format('YYYY-MM-DD'))
     setEndDate(moment(date.endDate).format('YYYY-MM-DD'))
+
     
 };
 
-const getDataByDate = (startDate, endDate) => {
+const handleSearch = (selected_id) => {
+
+    if (selected_id !== "") {
+
+        axios.get(`${getSource()}/orders/search?orderId=${selected_id}`, token_header)
+        .then((resp) => {
+            console.log(resp)
+            if (resp.data.payload.length > 0) {
+                setOrders(resp.data.payload);
+            } else {
+                setOrders([]);
+            }
+           
+        })  
+        .catch((err) => {
+            console.log(err);
+        })
+
+    } else {
+        setOrders(allOrders);
+    }
+
+};
+
+const handleSearchByDate = () => {
+
     const data = {
         startDate:startDate,
         endDate:endDate,
     };
-     axios.post(`${getSource()}/orders/byDate?type=booking&page=1&limit=20`, data, token_header)
+
+    axios.post(`${getSource()}/orders/byDate?type=booking&page=1&limit=20`, data, token_header)
     .then((resp) => {
         setOrders(resp.data.payload);
         // setAllOrders(resp.data.payload);
@@ -238,13 +243,8 @@ const getDataByDate = (startDate, endDate) => {
     .catch((err) => {
         console.log(err);
     })
-
 };
 
-useEffect(() => {
-    getDataByDate(startDate, endDate)
-    console.log("GG")
-}, [startDate, endDate])
 
     return (
         <div>
@@ -254,7 +254,9 @@ useEffect(() => {
                         <Row>
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
                             <Col lg={4} md={4} xs={12} className='pt-3' align='right'>
-                                <Dropdown isOpen={dropdownOpen} toggle={toggle} direction='down'>
+                             <Stack direction='row' spacing={1}>
+                                 <div>
+                                 <Dropdown isOpen={dropdownOpen} toggle={toggle} direction='down'>
                                     <DropdownToggle caret className='pl-4 pr-4 pt-3 pb-3'>{startDate} - {endDate} </DropdownToggle>
                                     <DropdownMenu>
                                     <DropdownItem header>
@@ -262,6 +264,15 @@ useEffect(() => {
                                     </DropdownItem>
                                 </DropdownMenu>
                                 </Dropdown>
+                                 </div>
+                                <div>
+                                <Button className='p-3 float-center' color='primary' onClick={handleSearchByDate}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                            </svg>
+                                        </Button>
+                                </div>
+                                </Stack>
                             </Col>
                             <Col lg={4} md={4} xs={12} align='right'>
                                 <Stack direction='row' spacing={1}>
@@ -304,17 +315,25 @@ useEffect(() => {
                             isLoading ? <Skeleton height={250} /> : (
                                 <div>
                                      <div className="p-1" style={{ width: '100%' }}>
-                                        <Table 
-                                            orders={orders} 
-                                            setOrders={setOrders}
-                                            setLoading={setLoading}
-                                            handleCurrentItem={handleCurrentItem}
-                                            handleCurrentItemDelete={handleCurrentItemDelete}
-                                            activeCount={activeCount}
-                                            setOpenCreate={setOpenCreate}
-                                            setOpenView={setOpenView}
-                                            handleView={handleView}
-                                        />
+                                        {
+                                              (orders && orders.length > 0 &&
+                                                <Table 
+                                                orders={orders} 
+                                                setOrders={setOrders}
+                                                setLoading={setLoading}
+                                                handleCurrentItem={handleCurrentItem}
+                                                handleCurrentItemDelete={handleCurrentItemDelete}
+                                                activeCount={activeCount}
+                                                setOpenCreate={setOpenCreate}
+                                                setOpenView={setOpenView}
+                                                handleView={handleView}
+                                            />)
+
+                                            ||
+
+                                            <Card className="p-5 text-center" >No data available.!</Card>
+                                        }
+                                       
                                     </div>
                                     <br />
                                 </div>
