@@ -164,7 +164,7 @@ const handleViewModal = (item) => {
                           <td>{item.customerPhone}</td>
                           <td align='left'>{item.orderType}</td>
                           <td align='right'>{Math.round(item.subTotal).toFixed(2)}</td>
-                          <td>{moment(item.createdAt).format('LLL')}</td>
+                          <td>{moment(item.createdAt).format('YYYY-MM-DD h:mm A')}</td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleViewModal(item)}>
                                 <VisibilityIcon fontSize="inherit" />

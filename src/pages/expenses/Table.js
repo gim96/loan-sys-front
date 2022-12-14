@@ -154,7 +154,7 @@ const getPageData = (number) => {
             
                           <td>{item.description}</td>
                           <td>{item.amount}.00</td>
-                          <td>{moment(item.createdAt).format('LLL')}</td>
+                          <td>{moment(item.createdAt).format('YYYY-MM-DD h:mm A')}</td>
                           <td>
                             {/* <IconButton aria-label="delete" size="large" onClick={() => setOpenView(true)}>
                                 <VisibilityIcon fontSize="inherit" />
