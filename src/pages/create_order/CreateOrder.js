@@ -177,8 +177,8 @@ class Typography extends React.Component {
 
   addItem = () => {
       // console.log(this.state);
-
-      if (this.state.itemCode !== "" && this.state.quantity !== "") {
+     
+      if (this.state.itemCode !== "" && this.state.orderType !== "") {
 
         const enterItem = this.state.items.filter((item) => item.itemCode === this.state.itemCode)
         if (enterItem.length > 0) {

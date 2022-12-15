@@ -19,6 +19,7 @@ import CreateModal from "./components/create-modal.js";
 import firebase from "firebase";
 import fileUrl from 'file-url';
 import { Base64 } from 'js-base64';
+import { Stack } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -256,29 +257,35 @@ const handleDelete = () => {
                     <Card className="p-3 pl-3">
                         <Row>
                             <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={2} md={2} xs={2}></Col>
+                            <Col lg={4} md={4} xs={12}></Col>
                             <Col lg={4} md={4} xs={12} align='right'>
-                                <Autocomplete
-                                    id="free-solo-demo"
-                                    freeSolo
-                                    options={itemCodes.map((option) => option)}
-                                    renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Item Code"
-                                        margin="normal"
-                                        variant="outlined"
-                                        placeholder="Search by Phone no"
-                                        onSelect={_handleTextFieldItems}
-                                        on
-                                    />
-                                    )}
-                                />
-                            </Col>
-                            <Col lg={2} md={2} xs={2} className="pt-3">
-                                <Button className='p-3 float-center' color='primary' onClick={handleSearch}>
-                                    search
-                                </Button>
+                                <Stack direction='row' spacing={1}>
+                                    <div className='w-100'>
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            options={itemCodes.map((option) => option)}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Item Code"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    placeholder="Search by Phone no"
+                                                    onSelect={_handleTextFieldItems}
+                                                    on
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                    <div className='pt-3'>
+                                        <Button className='p-3 float-center pl-4 pr-4' color='primary' onClick={handleSearch}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                            </svg>
+                                        </Button>
+                                    </div>
+                                </Stack>
                             </Col>
                         </Row>
                     </Card>
