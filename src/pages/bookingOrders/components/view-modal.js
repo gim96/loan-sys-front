@@ -1,13 +1,18 @@
 import { Card,
   Col, Input, Row, Modal,
    ModalHeader, ModalBody, ModalFooter, Button, CardHeader, CardBody,
-    CardFooter, CardText, CardTitle ,ListGroup ,ListGroupItem,Badge
+    CardFooter, CardText, CardTitle ,ListGroup ,ListGroupItem,Badge,
    } from "reactstrap";
 import { GetColorName } from 'hex-color-to-color-name';
 import { useEffect, useState } from "react";
 import moment from "moment";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function ViewModal({openView, setOpenView, stockItem, currentOrder}) {
+export default function ViewModal({openView, setOpenView, stockItem, currentOrder, customerData}) {
 
     const [items, setItems] = useState([])
     useEffect(() => {
@@ -15,7 +20,7 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
         setItems(currentOrder.items);
         // console.log(stockItem);
       }
-    }, [currentOrder])
+    }, [currentOrder, customerData])
 
     useEffect(() => {
       if (stockItem) {
@@ -23,6 +28,15 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
         // console.log(stockItem);
       }
     }, [stockItem])
+
+    const [open, setOpen] = useState('1');
+    const toggle = (id) => {
+      if (open === id) {
+        setOpen();
+      } else {
+        setOpen(id);
+      }
+    };
 
 
     return(
@@ -45,12 +59,12 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                               <div class="card-body">
                                 <table width="100%">
                                   <tr>
-                                    <td>
+                                  <td colSpan='2'>
                                       <hr />
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>
+                                  <td colSpan='2'>
                                       <table width="100%">
                                       
                                         <tr>
@@ -65,12 +79,53 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>
+                                  <td colSpan='2'>
                                       <hr />
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>
+                                    <td colSpan='2'>
+
+                                    <Accordion>
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                      >
+                                        <Typography>Customer details</Typography>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                      <Typography>
+                                            <Row>
+                                               <Col>
+                                                Name : {customerData.name}
+                                               </Col>
+                                               
+                                            </Row>
+                                            <Row>
+                                              <Col>Address : {customerData.address}</Col>
+                                              <Col></Col>
+                                            </Row>
+                                            <Row>
+                                            <Col>Phone : {customerData.phone}</Col>
+                                            </Row>
+                                            <Row className="pt-3">
+                                                <Col>
+                                                  <img src={customerData.idPhoto} className='border rounded' width='100%' alt='img' />
+                                                </Col>
+                                            </Row>
+                                        </Typography>
+                                      </AccordionDetails>
+                                    </Accordion>
+ 
+                                    </td>
+                                  </tr>
+                                 
+                                  <tr>
+                                  <td colSpan='2'><hr /></td>
+                                  </tr>
+                                  <tr>
+                                    <td colSpan='2'>
                                       <table width="100%">
                                         <tr className="bg-light border rounded">
                                           <th>#</th>
@@ -100,12 +155,12 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>
+                                  <td colSpan='2'>
                                       <hr />
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>
+                                  <td colSpan='2'>
                                       <table width="100%">
                                         <tr>
                                           <td>Total</td>

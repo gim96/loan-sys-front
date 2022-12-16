@@ -132,30 +132,23 @@ class Typography extends React.Component {
 
   _handleTextFieldItemCode = (e) => {
     // this.setState({ loading: true });
-    console.log(e.target.value);
-    this.setState({ itemCode: e.target.value });
-    const _itemCode = e.target.value;
-    if (e.target.value !== "") {
-      axios.get(`${getSource()}/items/byItemCode?itemCode=${_itemCode}`, token_header)
-      .then((resp) => {
-          console.log(resp)
-          this.setState({currentItem:resp.data.payload[0]});
+    if (this.state.itemCodes && this.state.itemCodes.length > 0) {
 
-          // console.log(arr);
-      })  
-      .catch((err) => {
-          console.log(err);
-      })
-      axios.get(`${getSource()}/stocks/byItemCode?itemCode=${_itemCode}`, token_header)
-      .then((resp) => {
-          console.log(resp)
-          this.setState({currentStock:resp.data.payload});
-          // console.log(arr);
-      })  
-      .catch((err) => {
-          console.log(err);
-      })
+        this.setState({ itemCode: e.target.value });
+        const _itemCode = e.target.value;
+        if (e.target.value !== "") {
+          axios.get(`${getSource()}/items/byItemCode?itemCode=${_itemCode}`, token_header)
+          .then((resp) => {
+            this.setState({currentItem:resp.data.payload[0]});
+
+        })  
+        .catch((err) => {
+            console.log(err);
+        })
+       
+      }
     }
+    
   };
 
   _handleTextFieldCustomerPhone = (e) => {
@@ -232,7 +225,7 @@ class Typography extends React.Component {
       subTotal:this.state.total * 1 - this.state.discount * 1, 
     };
     
-    if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
+    if (data.orderId !== ""  && data.items.length > 0 && data.cash !== "") {
        
       axios.post(`${getSource()}/orders`, data, token_header)
         .then((resp) => {
@@ -350,8 +343,7 @@ class Typography extends React.Component {
                             variant="outlined"
                             placeholder="Search by Phone no"
                             onSelect={this._handleTextFieldCustomerPhone}
-                            onChange={(e) => this.setState({itemCode:e.target.value})}
-                            on
+                            // onChange={(e) => this.setState({itemCode:e.target.value})}
                           />
                         )}
                       />
@@ -368,8 +360,7 @@ class Typography extends React.Component {
                             variant="outlined"
                             placeholder="Search by Phone no"
                             onSelect={this._handleTextFieldItemCode}
-                            onChange={(e) => this.setState({itemCode:e.target.value})}
-                            on
+                            // onChange={(e) => this.setState({itemCode:e.target.value})}
                           />
                         )}
                       />
@@ -417,76 +408,86 @@ class Typography extends React.Component {
                     <Col lg={8}>
                       <Card className="pt-2 pl-4 pr-4 pb-2" style={{height:'calc(100% - 2.2rem)'}}>
                         
-                      <ListGroup flush>
-                    <ListGroupItem>
-                      <Row>
-                          <Col lg={1} md={1}>
-                            <img width='32px' height='32px' src={avatar} alt="User"/>
-                          </Col>
-                          <Col  lg={6}>
-                            <p className="h6"> {this.state.currentCustomer.name}</p>
-                            <p/>{this.state.currentCustomer.address}
-                          </Col>
-                          <Col align='right' lg={5}>
-                            {
-                              this.state.currentCustomer.name && 
-                              <img 
-                                width='150px' 
-                                height='75px' 
-                                src={this.state.currentCustomer.idPhoto} 
-                                onClick={() => this.setState({showPhoto:true})} 
-                                alt="User"
-                              />
-                            }
-                          
-                          </Col>
-                        </Row>
-                      </ListGroupItem>
+                    <ListGroup flush>
+                      {
+                        this.state.currentCustomer &&
+                        <ListGroupItem>
+                        <Row>
+                            <Col lg={1} md={1}>
+                              <img width='32px' height='32px' src={avatar} alt="User"/>
+                            </Col>
+                            <Col  lg={6}>
+                              <p className="h6"> {this.state.currentCustomer.name}</p>
+                              <p/>{this.state.currentCustomer.address}
+                            </Col>
+                            <Col align='right' lg={5}>
+                              {
+                                this.state.currentCustomer.name && 
+                                <img 
+                                  width='150px' 
+                                  height='75px' 
+                                  src={this.state.currentCustomer.idPhoto} 
+                                  onClick={() => this.setState({showPhoto:true})} 
+                                  alt="User"
+                                />
+                              }
+                            
+                            </Col>
+                          </Row>
+                        </ListGroupItem>
+                      }
+                   
                       <br />
                       </ListGroup>
                       {/*  */}
-                    <ListGroup flush>
-                    <ListGroupItem>
-                      <Row>
-                          <Col>Item Code</Col>
-                          <Col align='right'>{this.state.currentItem.itemCode && this.state.currentItem.itemCode}</Col>
-                        </Row>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                      <Row>
-                          <Col>Description</Col>
-                          <Col align='right'>{this.state.currentItem.name}</Col>
-                        </Row>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                      <Row>
-                          <Col>Type</Col>
-                          <Col align='right'>{this.state.currentItem.type}</Col>
-                        </Row>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                      <Row>
-                          <Col>Size</Col>
-                          <Col align='right'>{this.state.currentItem.type}</Col>
-                        </Row>
-                      </ListGroupItem>
-                    </ListGroup>
-
+                      {
+                        this.state.currentItem && 
+                        <ListGroup flush>
+                        <ListGroupItem>
+                          <Row>
+                              <Col>Item Code</Col>
+                              <Col align='right'>{this.state.currentItem.itemCode && this.state.currentItem.itemCode}</Col>
+                            </Row>
+                          </ListGroupItem>
+                          <ListGroupItem>
+                          <Row>
+                              <Col>Description</Col>
+                              <Col align='right'>{this.state.currentItem.name}</Col>
+                            </Row>
+                          </ListGroupItem>
+                          <ListGroupItem>
+                          <Row>
+                              <Col>Type</Col>
+                              <Col align='right'>{this.state.currentItem.type}</Col>
+                            </Row>
+                          </ListGroupItem>
+                          <ListGroupItem>
+                          <Row>
+                              <Col>Size</Col>
+                              <Col align='right'>{this.state.currentItem.type}</Col>
+                            </Row>
+                          </ListGroupItem>
+                        </ListGroup>
+                      }
                     
-                    <CardBody>
-                     
-                    <Row>
-                          <Col>
-                            Color <br />
-                          <small>{GetColorName(`${this.state.currentItem.color}`)}</small>
-                          </Col>
-                          <Col align='right'>
-                          <Badge className="p-4" style={{backgroundColor:this.state.currentItem.color}} pill> </Badge>
+
+                      {
+                        this.state.currentItem &&
+                        <CardBody>
+                          <Row>
+                            <Col>
+                              Color <br />
+                              <small>{GetColorName(`${this.state.currentItem.color}`)}</small>
+                              </Col>
+                              <Col align='right'>
+                            <Badge className="p-4" style={{backgroundColor:this.state.currentItem.color}} pill> </Badge>
 
                           </Col>
                           
                         </Row>
                     </CardBody>
+                      }
+                    
            
                       <ListGroup flush>
                     <ListGroupItem>
@@ -1032,9 +1033,13 @@ class Typography extends React.Component {
       <Modal isOpen={this.state.showPhoto} toggle={() => this.setState({showPhoto:false})} >
         <ModalHeader>NIC</ModalHeader>
         <ModalBody>
-              <Col align="center">
-                <img src={this.state.currentCustomer.idPhoto} width='100%' alt='NIC' />
-              </Col>
+              {
+                this.state.currentCustomer && 
+                <Col align="center">
+                  <img src={this.state.currentCustomer.idPhoto} width='100%' alt='NIC' />
+                </Col>
+              }
+            
         </ModalBody>
         <ModalFooter>
         

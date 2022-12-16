@@ -60,6 +60,7 @@ const OngoingOrders = function () {
   const [activePhone, setActivePhone] = useState([]);
   const [orderIds, setOrderIds] = useState([])
   const [selectedId, setSelectedId] = useState('')
+  const [customerData, setCustomerData] = useState([])
 
   const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
   const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
@@ -104,6 +105,18 @@ const OngoingOrders = function () {
 //     setCodeSearch(currCode);
 // };
 
+const getCustomersData = (phone) => {
+
+    axios.get(`${getSource()}/customers/customerByPhone?phone=${phone}`, token_header)
+    .then((resp) => {
+        setCustomerData(resp.data.payload[0]);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+
+};
+
 const handleCurrentItem = (item) => {
     setCurrentOrder(item)
     setOpenEdit(true);
@@ -111,7 +124,7 @@ const handleCurrentItem = (item) => {
 };
 
 const handleView = (item) => {
-    console.log(item);
+    getCustomersData(item.customerPhone)
     setCurrentOrder(item);
     setOpenView(true);
     // getItems(item.itemCode);
@@ -356,6 +369,7 @@ const handleSearchByDate = () => {
                 handleView={handleView}
                 stockItem={stockItem && stockItem}
                 currentOrder={currentOrder}
+                customerData={customerData}
             />
             <EditModal 
                 openEdit={openEdit} 
