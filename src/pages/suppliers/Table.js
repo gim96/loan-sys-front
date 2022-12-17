@@ -7,7 +7,6 @@ import {
   Pagination,
   PaginationItem,
   PaginationLink,
-  Button,
 } from "reactstrap";
 
 import cloudIcon from "../../assets/tables/cloudIcon.svg";
@@ -21,15 +20,18 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import avatar from "../../assets/tables/avatar.png";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
 import s from "./Tables.module.scss";
 import mock from "./mock.js";
 import axios from "axios";
 import { getSource } from "../db/server";
 import {token_header} from "../../utils/tokenHeader";
+import moment from "moment";
 
 const Tables = function ({
-  customers, setCustomers, setLoading, handleCurrentItem, handleCurrentItemDelete, activeCount, setOpenCreate, handleView}) {
+  customers, setCustomers, setLoading,
+   handleCurrentItem, handleCurrentItemDelete,
+    activeCount, setOpenCreate, setOpenView
+  }) {
 
 const [selectedItem, setSelectedItem] = useState([]); 
 
@@ -98,7 +100,7 @@ const getPageData = (number) => {
   setCurrentPage(number);
   axios
     .get(
-      `${getSource()}/customers/active?page=${number}&limit=20`,token_header)
+      `${getSource()}/items?page=${number}&limit=20`,token_header)
     .then((resp) => {
       setCustomers(resp.data.payload);
       setLoading(false);
@@ -113,7 +115,7 @@ const getPageData = (number) => {
             <Col>
               {/* <Widget> */}
                 <div className={s.tableTitle}>
-                  <div className="headline-2">Customers details</div>
+                  <div className="headline-2">Supplier details</div>
                   <div className="d-flex">
                     <IconButton aria-label="delete" size="large" onClick={() => setOpenCreate(true)}>
                         <AddCircleIcon fontSize="inherit" />
@@ -135,30 +137,27 @@ const getPageData = (number) => {
                           <label for="checkbox100"/>
                         </div>
                       </th>
-                      <th className="w-25">Name</th>
+                      <th className="w-20">Name</th>
                       <th className="w-25">Phone</th>
-                      <th className="w-25">Address</th>
-                      <th className="w-25">Actions</th>
+                      <th className="w-20">Address</th>
+                      <th className="w-10">Description</th>
                     </tr>
                     </thead>
                     <tbody>
                     {customers
                       .map((item, i) => (
-                       
                         <tr key={uuidv4()}>
                           <td>
                             <div className="checkbox checkbox-primary">
                               {currentPage < 2 ? i+1 : (i + 1 + 20 * currentPage - 20)}
                             </div>
                           </td>
-                          <td className="d-flex align-items-center">
-                              <img className={s.image} src={avatar} alt="User"/>
-                              <span className="ml-3">{item.name}</span>
-                          </td>
+                          <td>{item.name}</td>
                           <td>{item.phone}</td>
                           <td>{item.address}</td>
+                          <td>{item.description}</td>
                           <td>
-                            <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>
+                            <IconButton aria-label="delete" size="large" onClick={() => setOpenView(true)}>
                                 <VisibilityIcon fontSize="inherit" />
                             </IconButton>
                             <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
@@ -168,6 +167,7 @@ const getPageData = (number) => {
                                 <DeleteIcon fontSize="inherit" />
                             </IconButton>
                           </td>
+                          
                         </tr>
                       ))}
                     </tbody>

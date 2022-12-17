@@ -135,7 +135,7 @@ const handleUpdate = (item) => {
       address:item.address,
       idPhoto:item.idPhoto,
     };
-    
+    console.log(data)
     axios.patch(`${getSource()}/customers?cusId=${currentItem._id}`, data, token_header)
     .then((resp) => {
         getData();
@@ -144,6 +144,12 @@ const handleUpdate = (item) => {
     .catch((err) => { 
       console.log(err);
     });
+};
+
+const handleView = (i) => {
+    const currItems = allCustomers[i]
+    setCurrentItem(currItems)
+    setOpenView(true)
 };
 
 const handleDelete = () => {
@@ -208,6 +214,7 @@ const handleDelete = () => {
                                             handleCurrentItemDelete={handleCurrentItemDelete}
                                             activeCount={activeCount}
                                             setOpenCreate={setOpenCreate}
+                                            handleView={handleView}
                                             // handleCreate
                                         />
                                     </div>
@@ -226,6 +233,7 @@ const handleDelete = () => {
             <ViewModal 
                 openView={openView} 
                 setOpenView={setOpenView} 
+                currentItem={currentItem}
             />
             <EditModal 
                 openEdit={openEdit} 

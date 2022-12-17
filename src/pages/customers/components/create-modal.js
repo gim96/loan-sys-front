@@ -104,7 +104,14 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
             <hr />
             <Row>
                 <Col lg={12} align='right'>
-                  <Button color="primary" onClick={handleSave}>
+                  <Button color="primary" onClick={() => {
+                    handleSave()
+                    setPhone("");
+                    setName("");
+                    setAddress("");
+                    setIdPhoto(null);
+
+                  }}>
                     Save
                   </Button>{' '}
                 

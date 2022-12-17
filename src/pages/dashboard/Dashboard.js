@@ -102,7 +102,7 @@ class Dashboard extends React.Component {
                 </Col>
               </Row>
               <Row className="gutter mb-4">
-                <Col className="mb-4 mb-md-0" xs={12} md={6}>
+                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
                   <Widget className="">
                     <table
                       width="100%"
@@ -156,7 +156,55 @@ class Dashboard extends React.Component {
                     </table>
                   </Widget>
                 </Col>
-                <Col className="mb-4 mb-md-0" xs={12} md={6}>
+                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
+                  <Widget className="">
+                    <table
+                      width="100%"
+                      cellPadding="10"
+                      style={{
+                        backgroundColor: "#4d53e0",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                    >
+                      <tbody>
+                        <tr>
+                          <td width="70%" style={{ color: "#fff" }}>
+                            <br />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="64"
+                              height="64"
+                              fill="currentColor"
+                              class="bi bi-wallet"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5V3zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a1.99 1.99 0 0 1-1-.268zM1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1z" />
+                            </svg>
+                          </td>
+                          <td
+                            align="center"
+                            style={{ color: "#fff", paddingTop: "5%" }}
+                          >
+                            <br />
+                            <h3>
+                              {/* Rs.
+                              {(
+                                Math.round(this.state.expenses * 100) / 100
+                              ).toFixed(2)} */}
+                            </h3>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <h6 style={{ color: "#fff" }}>Expenses</h6>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Widget>
+                </Col>
+                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
                   <Widget className="">
                     <table
                       width="100%"

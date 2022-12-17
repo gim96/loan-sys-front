@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, ListGroup,ListGroupItem  } from "reactstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import axios from "axios";
 import { getSource } from "../../db/server";
 import { token_header } from "../../../utils/tokenHeader";
 
-export default function EditModal({openEdit, setOpenEdit, currentItem, handleUpdate}) {
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+export default function ViewModal({openView, setOpenView, currentItem}) {
 
     const [phone, setPhone] = useState("");
     const [name, setName] = useState("");
@@ -19,37 +23,37 @@ export default function EditModal({openEdit, setOpenEdit, currentItem, handleUpd
         }
     }, [currentItem])
 
-    const handleSave = () => {
-      const item = {
-        phone:phone,
-        name:name,
-        address:address
-      };
-      handleUpdate(item);
-    };
+   
 
     return(
-        <Modal size='md' isOpen={openEdit}>
-        <ModalHeader toggle={() => setOpenEdit(false)}><EditIcon />&nbsp; Edit Customer details</ModalHeader>
+        <Modal size='lg' isOpen={openView}>
+        <ModalHeader toggle={() => setOpenView(false)}>&nbsp; Customer details</ModalHeader>
         <ModalBody>
           <Row>
               <Col className="p-4">
-                Phone
-                <Input type="text" onChange={(e) => setPhone(e.target.value)} value={phone} />
-                <br />
-                Name
-                <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
-                <br />
-                Address
-                <Input type="text" onChange={(e) => setAddress(e.target.value)} value={address} />
+                <ListGroup>
+                  <ListGroupItem>
+                    <PersonIcon /> &nbsp; {currentItem.name}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <LocalPhoneIcon /> &nbsp; {currentItem.phone}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <LocationOnIcon /> &nbsp; {currentItem.address}
+                  </ListGroupItem>
+                </ListGroup>
+              </Col>
+          </Row>
+          
+          <Row className="p-4 pt-2">
+              <Col className="p-4 border rounded">
+                 <img src={currentItem.idPhoto} width='100%' alt='nic' />
               </Col>
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={handleSave}>
-            Save
-          </Button>{' '}
-          <Button color="secondary">
+         
+          <Button color="secondary" onClick={() => setOpenView(false)}>
             Cancel
           </Button>
         </ModalFooter>
