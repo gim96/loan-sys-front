@@ -361,6 +361,7 @@ const handleSearchByDate = () => {
                 handleCreate={handleCreate}
                 itemCodes={itemCodes}
                 getItems={getItems}
+                
                 // stockItem={stockItem && stockItem}
             />
             <ViewModal 
@@ -370,6 +371,7 @@ const handleSearchByDate = () => {
                 stockItem={stockItem && stockItem}
                 currentOrder={currentOrder}
                 customerData={customerData}
+                setOpenEdit={setOpenEdit}
             />
             <EditModal 
                 openEdit={openEdit} 

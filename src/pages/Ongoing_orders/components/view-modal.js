@@ -6,8 +6,13 @@ import { Card,
 import { GetColorName } from 'hex-color-to-color-name';
 import { useEffect, useState } from "react";
 import moment from "moment";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function ViewModal({openView, setOpenView, stockItem, currentOrder}) {
+export default function ViewModal({openView, setOpenView, stockItem, currentOrder, customerData, setOpenEdit}) {
 
     const [items, setItems] = useState([])
     useEffect(() => {
@@ -15,7 +20,7 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
         setItems(currentOrder.items);
         // console.log(stockItem);
       }
-    }, [currentOrder])
+    }, [currentOrder, customerData])
 
     useEffect(() => {
       if (stockItem) {
@@ -23,7 +28,6 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
         // console.log(stockItem);
       }
     }, [stockItem])
-
 
     return(
         <Modal size='lg' isOpen={openView}>
@@ -68,6 +72,49 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                     <td>
                                       <hr />
                                     </td>
+                                  </tr>
+                                  <tr>
+                                    <td colSpan='2' className='pb-2'>
+                                    <Accordion>
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                      >
+                                        <Typography>Customer details</Typography>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                      <Typography>
+                                            <div className='p-2 pl-3 pt-3 pb-3 border rounded' style={{backgroundColor:'#f5f5f5'}}>
+                                            <Row>
+                                               <Col>
+                                                Name : {customerData.name}
+                                               </Col>
+                                               
+                                            </Row>
+                                            <Row>
+                                              <Col>Address : {customerData.address}</Col>
+                                              <Col></Col>
+                                            </Row>
+                                            <Row>
+                                            <Col>Phone : {customerData.phone}</Col>
+                                            </Row>
+                                            </div>
+                                            <Row className="pt-3">
+                                                <Col>
+                                                  <img src={customerData.idPhoto} className='border rounded' width='100%' alt='img' />
+                                                </Col>
+                                            </Row>
+                                          
+                                            
+                                        </Typography>
+                                      </AccordionDetails>
+                                    </Accordion>
+                                    
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td colSpan={2}></td>
                                   </tr>
                                   <tr>
                                     <td>
@@ -159,7 +206,11 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
 
                         <tr>
                           <td align="right">
-                           <Button color="secondary" onClick={() => setOpenView(false)}> Cancel</Button>
+                             <Button color="primary" onClick={() => {
+                               setOpenView(false)
+                               setOpenEdit(true)
+                             }}>Complete</Button>
+                          &nbsp; <Button color="secondary" onClick={() => setOpenView(false)}> Cancel</Button>
                           </td>
                         </tr>
                       </table>

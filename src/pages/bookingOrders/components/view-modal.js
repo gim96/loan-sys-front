@@ -12,7 +12,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function ViewModal({openView, setOpenView, stockItem, currentOrder, customerData}) {
+export default function ViewModal({openView, setOpenView, stockItem, currentOrder, customerData, setOpenEdit}) {
 
     const [items, setItems] = useState([])
     useEffect(() => {
@@ -73,7 +73,7 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                           {currentOrder.orderId}</td>
                                           <td align="right">
                                             <h5>Date</h5>
-                                           {moment(currentOrder.createdAt).format('LLL')}</td>
+                                            {moment(currentOrder.createdAt).format('YYYY-MM-DD h:mm A')}</td>
                                         </tr>
                                       </table>
                                     </td>
@@ -85,7 +85,6 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                   </tr>
                                   <tr>
                                     <td colSpan='2'>
-
                                     <Accordion>
                                       <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -96,6 +95,7 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                       </AccordionSummary>
                                       <AccordionDetails>
                                       <Typography>
+                                            <div className='p-2 pl-3 pt-3 pb-3 border rounded' style={{backgroundColor:'#f5f5f5'}}>
                                             <Row>
                                                <Col>
                                                 Name : {customerData.name}
@@ -109,11 +109,14 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
                                             <Row>
                                             <Col>Phone : {customerData.phone}</Col>
                                             </Row>
+                                            </div>
                                             <Row className="pt-3">
                                                 <Col>
                                                   <img src={customerData.idPhoto} className='border rounded' width='100%' alt='img' />
                                                 </Col>
                                             </Row>
+                                          
+                                            
                                         </Typography>
                                       </AccordionDetails>
                                     </Accordion>
@@ -214,7 +217,11 @@ export default function ViewModal({openView, setOpenView, stockItem, currentOrde
 
                         <tr>
                           <td align="right">
-                           <Button color="secondary" onClick={() => setOpenView(false)}> Cancel</Button>
+                          <Button color="primary" onClick={() => {
+                            setOpenView(false)
+                            setOpenEdit(true)
+                          }}>Accept</Button>
+                           &nbsp;&nbsp;<Button color="secondary" onClick={() => setOpenView(false)}> Cancel</Button>
                           </td>
                         </tr>
                       </table>

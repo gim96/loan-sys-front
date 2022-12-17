@@ -225,7 +225,7 @@ class Typography extends React.Component {
       subTotal:this.state.total * 1 - this.state.discount * 1, 
     };
     
-    if (data.orderId !== ""  && data.items.length > 0 && data.cash !== "") {
+    if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
        
       axios.post(`${getSource()}/orders`, data, token_header)
         .then((resp) => {

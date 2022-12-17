@@ -58,6 +58,7 @@ const OngoingOrders = function () {
     const [orderIds, setOrderIds] = useState([]);
     const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
   const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
+  const [customerData, setCustomerData] = useState([])
 
 
   async function getData() {
@@ -98,6 +99,19 @@ const OngoingOrders = function () {
 //     setCodeSearch(currCode);
 // };
 
+const getCustomersData = (phone) => {
+
+    axios.get(`${getSource()}/customers/customerByPhone?phone=${phone}`, token_header)
+    .then((resp) => {
+        console.log(resp)
+        setCustomerData(resp.data.payload[0]);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+
+};
+
 const handleCurrentItem = (item) => {
     setCurrentOrder(item)
     setOpenEdit(true);
@@ -105,11 +119,11 @@ const handleCurrentItem = (item) => {
 };
 
 const handleView = (item) => {
-    console.log(item);
+    getCustomersData(item.customerPhone)
     setCurrentOrder(item);
     setOpenView(true);
-    // getItems(item.itemCode);
 };
+
 const handleCurrentItemDelete = (item) => {
     setCurrentOrder(item)
     setOpenDelete(true);
@@ -323,6 +337,7 @@ const handleSearchByDate = () => {
                 handleCreate={handleCreate}
                 itemCodes={itemCodes}
                 getItems={getItems}
+              
                 // stockItem={stockItem && stockItem}
             />
             <ViewModal 
@@ -331,6 +346,7 @@ const handleSearchByDate = () => {
                 handleView={handleView}
                 stockItem={stockItem && stockItem}
                 currentOrder={currentOrder}
+                customerData={customerData}
             />
             <EditModal 
                 openEdit={openEdit} 
