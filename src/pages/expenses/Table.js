@@ -30,7 +30,7 @@ import moment from "moment";
 const Tables = function ({
   customers, setCustomers, setLoading,
    handleCurrentItem, handleCurrentItemDelete,
-    activeCount, setOpenCreate, setOpenView
+    activeCount, setOpenCreate, setOpenView, handleView
   }) {
 
 const [selectedItem, setSelectedItem] = useState([]); 
@@ -137,9 +137,11 @@ const getPageData = (number) => {
                           <label for="checkbox100"/>
                         </div>
                       </th>
-                      <th className="w-10">Description</th>
-                      <th className="w-25">Amount</th>
+                      <th className="w-10">Supplier</th>
+                      <th className="w-25">Bill Photo</th>
+                      <th className="w-20">Amount</th>
                       <th className="w-20">Date</th>
+                      <th className="w-20">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -152,13 +154,16 @@ const getPageData = (number) => {
                             </div>
                           </td>
             
-                          <td>{item.description}</td>
+                          <td>{item.company}</td>
+                          <td>
+                            <img src={item.billPhoto} style={{objectFit:'cover'}} width='75px' height='50px' alt='img' />
+                          </td>
                           <td>{item.amount}.00</td>
                           <td>{moment(item.createdAt).format('YYYY-MM-DD h:mm A')}</td>
                           <td>
-                            {/* <IconButton aria-label="delete" size="large" onClick={() => setOpenView(true)}>
+                            <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>
                                 <VisibilityIcon fontSize="inherit" />
-                            </IconButton> */}
+                            </IconButton>
                             <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
                                 <EditIcon fontSize="inherit" />
                             </IconButton>

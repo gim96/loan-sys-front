@@ -56,6 +56,7 @@ const Expenses = function () {
   const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
   const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
   const [amount, setAmount] = useState('')
+  const [suppliers, setSuppliers] = useState([])
 
 
   async function getData() {
@@ -70,6 +71,21 @@ const Expenses = function () {
             arr.push(item.itemCode);
         })
         setItemCodes(arr);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+
+    axios.get(`${getSource()}/suppliers/all`, token_header)
+    .then((resp) => {
+        
+        const arr = [];
+        const items = resp.data.payload; 
+        items.map((item) => {
+            arr.push(item.name);
+        })
+        console.log(arr)
+        setSuppliers(arr);
     })  
     .catch((err) => {
         console.log(err);
@@ -118,12 +134,8 @@ const handleSearch = () => {
     
 };
 
-const handleCreate = (item) => {
+const handleCreate = (data) => {
 
-    const data = {
-        description: item.description,
-        amount: item.amount,
-    };
     axios.post(`${getSource()}/expenses`, data, token_header)
     .then((resp) => {
 
@@ -136,19 +148,9 @@ const handleCreate = (item) => {
     });
 };
 
-const handleUpdate = (item) => {
+const handleUpdate = (data) => {
 
-    // console.log(currentItem._id);
-    const data = {
-      itemCode:item.itemCode,
-      name: item.name,
-      color:item.color,
-      size:item.size,
-      type:item.type,
-      price:item.price,
-      status:item.status,
-    };
-    axios.patch(`${getSource()}/items?id=${currentItem._id}`, data, token_header)
+    axios.patch(`${getSource()}/expenses?id=${currentItem._id}`, data, token_header)
     .then((resp) => {
         getData();
         setOpenEdit(false); 
@@ -195,6 +197,11 @@ const handleSearchByDate = () => {
         console.log(err);
     })
 };
+
+const handleView = (i) => {
+    setCurrentItem(allItems[i])
+    setOpenView(true)
+}
 
     return (
         <div>
@@ -266,6 +273,7 @@ const handleSearchByDate = () => {
                                             handleCurrentItemDelete={handleCurrentItemDelete}
                                             activeCount={activeCount}
                                             setOpenCreate={setOpenCreate}
+                                            handleView={handleView}
                                         />
                                     </div>
                                     <br />
@@ -279,16 +287,19 @@ const handleSearchByDate = () => {
                 openCreate={openCreate}
                 setOpenCreate={setOpenCreate}
                 handleCreate={handleCreate}
+                suppliers={suppliers}
             />
             <ViewModal 
                 openView={openView} 
                 setOpenView={setOpenView} 
+                currentItem={currentItem}
             />
             <EditModal 
                 openEdit={openEdit} 
                 setOpenEdit={setOpenEdit}
                 currentItem={currentItem}
                 handleUpdate={handleUpdate}
+                suppliers={suppliers}
             />
             <DeleteModal 
                 openDelete={openDelete} 

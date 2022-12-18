@@ -69,6 +69,10 @@ useEffect(() => {
     handleCurrentItemDelete(currItem);
  };    
 
+ const handleShow = (i) => {
+    handleView(i)
+ };
+
 
 // 
 
@@ -158,7 +162,7 @@ const getPageData = (number) => {
                           <td>{item.phone}</td>
                           <td>{item.address}</td>
                           <td>
-                            <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>
+                            <IconButton aria-label="delete" size="large" onClick={() => handleShow(i)}>
                                 <VisibilityIcon fontSize="inherit" />
                             </IconButton>
                             <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
