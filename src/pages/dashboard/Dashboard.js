@@ -1,15 +1,18 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Col, Row } from "reactstrap";
+import { Card, Col, Row } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 import ApexActivityChart from "./components/ActivityChart.js";
-
+import ReactApexChart from "react-apexcharts";
+import {token_header} from "../../utils/tokenHeader";
+// import {token_header} from "../.."
 import meal1 from "../../assets/dashboard/meal-1.svg";
 import meal2 from "../../assets/dashboard/meal-2.svg";
 import meal3 from "../../assets/dashboard/meal-3.svg";
 import { getSource } from "../../pages/db/server";
 import axios from "axios";
 import moment from "moment";
+
 
 import s from "./Dashboard.module.scss";
 
@@ -40,8 +43,30 @@ class Dashboard extends React.Component {
       expenses: 0,
       totalOrders:0,
       rejectedOrders:0,
+      summery:[],
 
       loading: false,
+      series: [
+        10, 
+        220,
+        22
+      ],
+            options: {
+              chart: {
+                type: 'donut',
+              },
+              responsive: [{
+                breakpoint: 280,
+                options: {
+                  chart: {
+                    width: 25
+                  },
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }]
+            },
     };
   }
 
@@ -76,10 +101,23 @@ class Dashboard extends React.Component {
     });
   }
 
+  getData() {
+    axios.get(`${getSource()}/orders/summery`, token_header)
+    .then((resp) => {
+        this.setState({summery:resp.data.payload});
+        // setAllOrders(resp.data.payload);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+  }
+
   componentDidMount() {
     //orders
-    
+    this.getData();
   }
+
+
 
   render() {
     if (this.state.loading === true) {
@@ -102,7 +140,7 @@ class Dashboard extends React.Component {
                 </Col>
               </Row>
               <Row className="gutter mb-4">
-                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
+                <Col className="mb-4 mb-md-0" lg={3} xs={12} md={6}>
                   <Widget className="">
                     <table
                       width="100%"
@@ -119,8 +157,8 @@ class Dashboard extends React.Component {
                             <br />
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              width="64"
-                              height="64"
+                              width="32"
+                              height="32"
                               fill="currentColor"
                               class="bi bi-cash-coin"
                               viewBox="0 0 16 16"
@@ -140,23 +178,23 @@ class Dashboard extends React.Component {
                           >
                             <br />
                             <h3>
-                              {/* Rs.
-                              {(
-                                Math.round(this.state.amount * 100) / 100
+                            
+                              {/* {(
+                               this.state.summery && Math.round(this.state.summery[0] * 100) / 100
                               ).toFixed(2)} */}
                             </h3>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            <h6 style={{ color: "#fff" }}>Current balance</h6>
+                            <h6 style={{ color: "#fff" }}>Earnings</h6>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </Widget>
                 </Col>
-                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
+                <Col className="mb-4 mb-md-0" lg={3} xs={12} md={6}>
                   <Widget className="">
                     <table
                       width="100%"
@@ -171,15 +209,10 @@ class Dashboard extends React.Component {
                         <tr>
                           <td width="70%" style={{ color: "#fff" }}>
                             <br />
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="64"
-                              height="64"
-                              fill="currentColor"
-                              class="bi bi-wallet"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5V3zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a1.99 1.99 0 0 1-1-.268zM1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+                               <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
                             </svg>
                           </td>
                           <td
@@ -188,23 +221,20 @@ class Dashboard extends React.Component {
                           >
                             <br />
                             <h3>
-                              {/* Rs.
-                              {(
-                                Math.round(this.state.expenses * 100) / 100
-                              ).toFixed(2)} */}
+                           {this.state.summery.booking_orders }
                             </h3>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            <h6 style={{ color: "#fff" }}>Expenses</h6>
+                            <h6 style={{ color: "#fff" }}>Bookings</h6>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </Widget>
                 </Col>
-                <Col className="mb-4 mb-md-0" lg={4} xs={12} md={6}>
+                <Col className="mb-4 mb-md-0" lg={3} xs={12} md={6}>
                   <Widget className="">
                     <table
                       width="100%"
@@ -219,15 +249,8 @@ class Dashboard extends React.Component {
                         <tr>
                           <td width="70%" style={{ color: "#fff" }}>
                             <br />
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="64"
-                              height="64"
-                              fill="currentColor"
-                              class="bi bi-wallet"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5V3zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a1.99 1.99 0 0 1-1-.268zM1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clipboard-pulse" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1Zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1Zm-2 0h1v1H3a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3.5a1 1 0 0 0-1-1h-1v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2Zm6.979 3.856a.5.5 0 0 0-.968.04L7.92 10.49l-.94-3.135a.5.5 0 0 0-.895-.133L4.232 10H3.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 .416-.223l1.41-2.115 1.195 3.982a.5.5 0 0 0 .968-.04L9.58 7.51l.94 3.135A.5.5 0 0 0 11 11h1.5a.5.5 0 0 0 0-1h-1.128L9.979 5.356Z"/>
                             </svg>
                           </td>
                           <td
@@ -236,16 +259,55 @@ class Dashboard extends React.Component {
                           >
                             <br />
                             <h3>
-                              {/* Rs.
-                              {(
-                                Math.round(this.state.expenses * 100) / 100
-                              ).toFixed(2)} */}
+                            
+                            {this.state.summery.pending_orders }
                             </h3>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            <h6 style={{ color: "#fff" }}>Expenses</h6>
+                            <h6 style={{ color: "#fff" }}>Pending Orders</h6>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Widget>
+                </Col>
+                <Col className="mb-4 mb-md-0" lg={3} xs={12} md={6}>
+                  <Widget className="">
+                    <table
+                      width="100%"
+                      cellPadding="10"
+                      style={{
+                        backgroundColor: "#4d53e0",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                    >
+                      <tbody>
+                        <tr>
+                          <td width="70%" style={{ color: "#fff" }}>
+                            <br />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                          </td>
+                          <td
+                            align="center"
+                            style={{ color: "#fff", paddingTop: "5%" }}
+                          >
+                            <br />
+                            <h3 className="pt-10">
+                            {this.state.summery.closed_orders }
+                            </h3>
+                           
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <h6 style={{ color: "#fff" }}>Closed Orders</h6>
                           </td>
                         </tr>
                       </tbody>
@@ -317,6 +379,20 @@ class Dashboard extends React.Component {
                       </tbody>
                     </table>
                   </Widget>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={6}>
+                  <Card className="p-5">
+                    <ReactApexChart options={this.state.options} series={this.state.series} type="donut" />
+                  </Card>
+                 
+                </Col>
+                <Col lg={6}>
+                  <Card className="p-5">
+                    <ReactApexChart options={this.state.options} series={this.state.series} type="donut" />
+                  </Card>
+                 
                 </Col>
               </Row>
             </Col>

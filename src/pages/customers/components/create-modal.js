@@ -98,7 +98,7 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
                   NIC Photo
                   <Input type="file" onChange={handlePhoto} />
                   <br />
-                  <img src={idPhoto} width='150px' height='80px' />
+                  <img src={idPhoto} width='150px' height='80px' alt='img' />
                 </Col>
             </Row>
             <hr />
