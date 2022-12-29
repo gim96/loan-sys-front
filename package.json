@@ -1,7 +1,7 @@
 {
   "name": "sofia-react-template",
   "version": "1.0.0",
-  "homepage": "./",
+  "homepage": "http://sanjaya.inivac.com/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
@@ -66,12 +66,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/img-redundant-alt */
 import { useEffect, useState } from "react";
 import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Badge, Spinner } from "reactstrap";
 import PerfectScrollbar from 'react-perfect-scrollbar'
