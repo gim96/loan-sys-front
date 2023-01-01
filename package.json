@@ -1,7 +1,6 @@
 {
   "name": "sofia-react-template",
   "version": "1.0.0",
-  "homepage": "http://sanjaya.inivac.com/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
