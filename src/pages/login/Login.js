@@ -120,7 +120,7 @@ class Login extends React.Component {
 
                 <form>
                   <FormGroup className="my-3">
-                    <FormText>Email</FormText>
+                    <FormText>Username</FormText>
                     <Input
                       id="email"
                       className="input-transparent pl-3"

@@ -8,6 +8,7 @@ import LinksGroup from "./LinksGroup/LinksGroup.js";
 import { changeActiveSidebarItem } from "../../actions/navigation.js";
 import { logoutUser } from "../../actions/auth.js";
 import SofiaLogo from "../Icons/SidebarIcons/SofiaLogo.js";
+import logo from "../../assets/logo.png";
 
 class Sidebar extends React.Component {
   static propTypes = {
@@ -68,7 +69,8 @@ class Sidebar extends React.Component {
       >
         <header className={s.logo}>
           {/* <SofiaLogo /> */}
-          <span className={s.title}>Sanjaya Proffessionals</span>
+          {/* <span className={s.title}>Sanjaya Proffessionals</span> */}
+          <img src={logo} width='100%' />
         </header>
         <ul className={s.nav}>
           <LinksGroup

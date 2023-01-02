@@ -13,6 +13,8 @@ import { getSource } from "../../pages/db/server";
 import axios from "axios";
 import moment from "moment";
 
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+
 
 import s from "./Dashboard.module.scss";
 
@@ -47,14 +49,16 @@ class Dashboard extends React.Component {
 
       loading: false,
       series: [
-        10, 
-        220,
-        22
-      ],
+            0, 
+            0,
+            0
+          ],
             options: {
               chart: {
                 type: 'donut',
+               
               },
+              labels:['Booking','Pending','Closed'],
               responsive: [{
                 breakpoint: 280,
                 options: {
@@ -104,7 +108,11 @@ class Dashboard extends React.Component {
   getData() {
     axios.get(`${getSource()}/orders/summery`, token_header)
     .then((resp) => {
-        this.setState({summery:resp.data.payload});
+        const allThreeOrders = [resp.data.payload.booking_orders, resp.data.payload.pending_orders, resp.data.payload.closed_orders]
+        this.setState({
+          summery:resp.data.payload, 
+          series:allThreeOrders
+        });
         // setAllOrders(resp.data.payload);
     })  
     .catch((err) => {
@@ -316,71 +324,7 @@ class Dashboard extends React.Component {
                 </Col>
               </Row>
 
-              <Row className="gutter mb-4">
-                <Col className="mb-4 mb-md-0" xs={12} md={4}>
-                  <Widget className="">
-                    <table
-                      width="100%"
-                      cellPadding="10"
-                      style={{
-                        backgroundColor: "#fff",
-                        // color: "#fff",
-                        fontWeight: "bold",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <tbody>
-                        <tr>
-                          <td width="70%">Sold Items</td>
-                          {/* <td align="right">{this.state.totalItemCount}</td> */}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Widget>
-                </Col>
-                <Col className="mb-4 mb-md-0" xs={12} md={4}>
-                  <Widget className="">
-                    <table
-                      width="100%"
-                      cellPadding="10"
-                      style={{
-                        backgroundColor: "#fff",
-                        // color: "#fff",
-                        fontWeight: "bold",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <tbody>
-                        <tr>
-                          <td width="70%">success bills</td>
-                          {/* <td align="right">{this.state.totalOrders}</td> */}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Widget>
-                </Col>
-                <Col className="mb-4 mb-md-0" xs={12} md={4}>
-                  <Widget className="">
-                    <table
-                      width="100%"
-                      cellPadding="10"
-                      style={{
-                        backgroundColor: "#fff",
-                        // color: "#fff",
-                        fontWeight: "bold",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <tbody>
-                        <tr>
-                          <td width="70%">Rejected bills</td>
-                          {/* <td align="right">{this.state.rejectedOrders}</td> */}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Widget>
-                </Col>
-              </Row>
+             
               <Row>
                 <Col lg={6}>
                   <Card className="p-5">
@@ -389,14 +333,37 @@ class Dashboard extends React.Component {
                  
                 </Col>
                 <Col lg={6}>
-                  <Card className="p-5">
-                    <ReactApexChart options={this.state.options} series={this.state.series} type="donut" />
-                  </Card>
-                 
+                  {/* <Row>
+                    <Col lg={6}>
+                      <Card className="p-5">
+                        <CheckroomIcon fontSize="55px" />
+                      </Card>
+                    </Col>
+                    <Col lg={6}>
+                      <Card className="p-5">
+                        fdf
+                      </Card>
+                    </Col>
+                  </Row>
+                  <br />
+                  <Row>
+                    <Col lg={6}>
+                      <Card className="p-5">
+                        fdf
+                      </Card>
+                    </Col>
+                    <Col lg={6}>
+                      <Card className="p-5">
+                        fdf
+                      </Card>
+                    </Col>
+                  </Row> */}
                 </Col>
               </Row>
             </Col>
           </Row>
+         <hr />
+         
         </div>
       );
     }
