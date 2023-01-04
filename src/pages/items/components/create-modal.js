@@ -61,7 +61,7 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
             <Row>
                 <Col >
                     Item Code
-                    <Input type="number" onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
+                    <Input type="text" onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
                     <br />
                     Name
                     <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
