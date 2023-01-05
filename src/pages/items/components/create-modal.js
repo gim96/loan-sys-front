@@ -16,7 +16,7 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
     const [type, setType] = useState("");
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState(null);
 
     const handleSave = () => {
      
@@ -63,21 +63,27 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
                     Item Code
                     <Input type="text" onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
                     <br />
-                    Name
-                    <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
+                    Description
+                    <Input type="textarea" onChange={(e) => setName(e.target.value)} value={name} />
                     <br />
                
                     Size
-                    <Input type="select" onChange={(e) => setSize(e.target.value)} value={size}>
-                      <option>S</option> 
-                      <option>M</option> 
-                      <option>L</option> 
-                      <option>XL</option> 
-                      <option>XXL</option>  
-                    </Input> 
+                    <Input type="text" onChange={(e) => setSize(e.target.value)} value={size} />
                     <br />
                     Type
                     <Input type="select" onChange={(e) => setType(e.target.value)} value={type}>
+                      <option>Sarong</option> 
+                      <option>Blazer</option> 
+                      <option>Shirt</option> 
+                      <option>Trouser</option> 
+                      <option>Waistcoat</option> 
+                      <option>Accessory</option>  
+
+                    </Input> 
+                    <br />
+                    Color
+                    {/* <Input type='color' className="w-50" onChange={(e) => setColor(e.target.value)} /> */}
+                    <Input type="select" onChange={(e) => setColor(e.target.value)} value={color}>
                       <option>Sarong</option> 
                       <option>Blazor</option> 
                       <option>Shirt</option> 
@@ -87,11 +93,8 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
 
                     </Input> 
                     <br />
-                    Color
-                    <Input type='color' className="w-50" onChange={(e) => setColor(e.target.value)} />
-                    <br />
                     Price
-                    <Input type="number" onChange={(e) => setPrice(e.target.value)} value={price} />
+                    <Input type="number" min='0'  onChange={(e) => setPrice(e.target.value)} value={price} />
                 </Col>
                 <Col>
                 

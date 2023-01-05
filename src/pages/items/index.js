@@ -191,16 +191,21 @@ const handleCreate = (item) => {
       status:1,  
       images:images
     };
-    console.log(data)
-    console.log(images)
+
+    // console.log(data)
+    // console.log(images)
     // console.log(data)
     axios.post(`${getSource()}/items`, data, token_header)
     .then((resp) => {
-        getData();
-        setOpenCreate(false); 
+        if (resp.status === 200 || resp.status === 201) {
+            getData();
+            setOpenCreate(false); 
+        } 
+       
     })
     .catch((err) => { 
-      console.log(err);
+        console.log(err)
+        alert('This item already added.!')
     });
 };
 
