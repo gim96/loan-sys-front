@@ -106,8 +106,8 @@ export default function EditModal({
         value:'Shirt'
       },
       {
-        label:'Blazor',
-        value:'Blazor'
+        label:'Blazer',
+        value:'Blazer'
       },
       {
         label:'Waistcoat',
@@ -140,21 +140,39 @@ export default function EditModal({
                     <br />
                
                     Size
-                    <Select
-                      value={{label:size, value:size}}
-                      onChange={(value) => setSize(value.value)}
-                      options={options}
-                    />
+                    <Input type="text" onChange={(e) => setSize(e.target.value)} value={size} />
                     <br />
                     Type
-                    <Select
-                      value={{label:type, value:type}}
-                      onChange={(value) => setType(value.value)}
-                      options={clouth_types}
-                    />
+                    <Input type="select" onChange={(e) => setType(e.target.value)} value={type}>
+                      <option>Sarong</option> 
+                      <option>Blazer</option> 
+                      <option>Shirt</option> 
+                      <option>Trouser</option> 
+                      <option>Waistcoat</option> 
+                      <option>Accessory</option>  
+                    </Input> 
                     <br />
                     Color
-                    <Input type='color' className="w-50" onChange={(e) => setColor(e.target.value)} value={color} />
+                    <Input type="select" onChange={(e) => setColor(e.target.value)} value={color}>
+                      <option>black</option>
+                      <option>white</option> 
+                      <option>green</option> 
+                      <option>light green</option> 
+                      <option>Dark green</option> 
+                      <option>blue</option> 
+                      <option>light blue</option> 
+                      <option>dark blue</option> 
+                      <option>red</option> 
+                      <option>dark red</option> 
+                      <option>light red</option> 
+                      <option>yellow</option> 
+                      <option>purple</option> 
+                      <option>cream</option> 
+                      <option>gray</option>  
+                      <option>ash</option>  
+                      <option>light gray</option>  
+                      <option>dark gray</option> 
+                    </Input> 
                     <br />
                     Price
                     <Input type="number" onChange={(e) => setPrice(e.target.value)} value={price} />

@@ -78,19 +78,29 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
                       <option>Trouser</option> 
                       <option>Waistcoat</option> 
                       <option>Accessory</option>  
-
                     </Input> 
                     <br />
                     Color
                     {/* <Input type='color' className="w-50" onChange={(e) => setColor(e.target.value)} /> */}
                     <Input type="select" onChange={(e) => setColor(e.target.value)} value={color}>
-                      <option>Sarong</option> 
-                      <option>Blazor</option> 
-                      <option>Shirt</option> 
-                      <option>Trouser</option> 
-                      <option>Waistcoat</option> 
-                      <option>Accessory</option>  
-
+                      <option>black</option>
+                      <option>white</option> 
+                      <option>green</option> 
+                      <option>light green</option> 
+                      <option>Dark green</option> 
+                      <option>blue</option> 
+                      <option>light blue</option> 
+                      <option>dark blue</option> 
+                      <option>red</option> 
+                      <option>dark red</option> 
+                      <option>light red</option> 
+                      <option>yellow</option> 
+                      <option>purple</option> 
+                      <option>cream</option> 
+                      <option>gray</option>  
+                      <option>ash</option>  
+                      <option>light gray</option>  
+                      <option>dark gray</option> 
                     </Input> 
                     <br />
                     Price

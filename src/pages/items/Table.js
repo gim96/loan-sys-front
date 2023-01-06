@@ -170,7 +170,8 @@ const getPageData = (number) => {
                           <td>{item.type}</td>
                           <td>{item.size}</td>
                           <td>
-                          <span class="badge badge-secondary pl-3 pr-3" style={{backgroundColor:`${item.color}`}}>&nbsp; </span>
+                            <span>{item.color}</span>
+                          {/* <span class="badge badge-secondary pl-3 pr-3" style={{backgroundColor:`${item.color}`}}>&nbsp; </span> */}
                           </td>
                           <td>{item.price}.00</td>
                           <td>

@@ -73,7 +73,8 @@ export default function ViewModal({openView, setOpenView, currentItem}) {
                   <span className="text-light">Color</span>
                 </Col>
                 <Col lg={6} align='right'>
-                  <span class="badge badge-secondary pl-3 pr-3 border-light" style={{backgroundColor:`${currentItem.color}`}}>&nbsp; </span>
+                  <span class='text-light'>{currentItem.color}</span>
+                  {/* <span class="badge badge-secondary pl-3 pr-3 border-light" style={{backgroundColor:`${currentItem.color}`}}>&nbsp; </span> */}
                 </Col>
                
                 </Row>
