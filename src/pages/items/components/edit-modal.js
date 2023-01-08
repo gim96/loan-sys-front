@@ -133,10 +133,10 @@ export default function EditModal({
           <Row>
               <Col className="p-4">
                     Item Code
-                    <Input type="text" onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
+                    <Input type="text" disabled={true} onChange={(e) => setItemCode(e.target.value)} value={itemCode} />
                     <br />
                     Name
-                    <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
+                    <Input type="text"  onChange={(e) => setName(e.target.value)} value={name} />
                     <br />
                
                     Size

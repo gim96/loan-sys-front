@@ -78,6 +78,7 @@ const Items = function () {
         items.map((item) => {
             arr.push(item.itemCode);
         })
+        console.log(arr)
         setItemCodes(arr);
         setActiveCount(arr.length)
     })  
@@ -148,9 +149,22 @@ const Items = function () {
 
 
 const _handleTextFieldItems = (e) => {
+    console.log(allItems)
     const currCode = e.target.value;
     const selItem =  allItems.filter((item) => item.itemCode === currCode);
-    setSelectedItem(selItem);
+    if (selItem.length > 0) {
+        setSelectedItem(selItem);
+    } else {
+
+        axios.get(`${getSource()}/items/byItemCode?itemCode=${currCode}`, token_header)
+        .then((resp) => {
+            setSelectedItem(resp.data.payload);
+        })  
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+    // console.log(selItem)
     setCodeSearch(currCode);
 };
 

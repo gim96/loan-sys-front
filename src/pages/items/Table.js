@@ -27,6 +27,7 @@ import mock from "./mock.js";
 import axios from "axios";
 import { getSource } from "../db/server";
 import {token_header} from "../../utils/tokenHeader";
+import Items from ".";
 
 const Tables = function ({
   customers, setCustomers, setLoading,
@@ -131,9 +132,9 @@ const getPageData = (number) => {
                 </div>
                 <div className="widget-table-overflow">
                   <Table className={`table-striped table-borderless table-hover ${s.statesTable}`} responsive>
-                    <thead>
+                    <thead className='border'>
                     <tr>
-                      <th className={s.checkboxCol}>
+                      <th className={`${s.checkboxCol}`}>
                         <div className="checkbox checkbox-primary">
                           <input
                             className="styled"
@@ -144,10 +145,11 @@ const getPageData = (number) => {
                         </div>
                       </th>
                       <th className="w-10">Item Code</th>
-                      <th className="w-25">Item Name</th>
+                      <th className="w-25">Description</th>
                       <th className="w-20">Cloth Type</th>
                       <th className="w-10">Size</th>
                       <th className="w-10">Color</th>
+                      <th className="w-5">Photo</th>
                       <th className="w-5">Price</th>
                       <td className="w-5">Status</td>
                       <th className="w-10">Actions</th>
@@ -173,6 +175,7 @@ const getPageData = (number) => {
                             <span>{item.color}</span>
                           {/* <span class="badge badge-secondary pl-3 pr-3" style={{backgroundColor:`${item.color}`}}>&nbsp; </span> */}
                           </td>
+                          <td>{item.images.length ? (<img src={item.images[0]} width='25px' height='25px' style={{objectFit:'cover', borderRadius:'5px'}} />) : ''}</td>
                           <td>{item.price}.00</td>
                           <td>
                             {item.status === 0 ? (<Badge color='danger'>Out of Stock</Badge>) : (item.status === 1 ? <Badge color='success'>In Stock</Badge> : <Badge color='warning'>Booked</Badge>)}

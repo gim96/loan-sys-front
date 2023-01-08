@@ -23,9 +23,9 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
       const item = {
         itemCode:itemCode,
         name:name,
-        color:color,
+        color:color !== '' ? color : 'black',
         size:size,
-        type:type,
+        type:type !== '' ? type : 'Sarong',
         price:price,
         status:1,
       };
