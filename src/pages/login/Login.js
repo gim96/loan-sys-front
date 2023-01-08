@@ -38,8 +38,8 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
-      email: "gim",
-      password: "123",
+      email: "",
+      password: "",
     };
 
     this.doLogin = this.doLogin.bind(this);
