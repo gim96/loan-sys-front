@@ -65,6 +65,7 @@ const Items = function () {
     axios.get(`${getSource()}/items`, token_header)
     .then((resp) => {
         setActivePhone(resp.data.payload);
+      
     })  
     .catch((err) => {
         console.log(err);
@@ -78,6 +79,7 @@ const Items = function () {
             arr.push(item.itemCode);
         })
         setItemCodes(arr);
+        setActiveCount(arr.length)
     })  
     .catch((err) => {
         console.log(err);
