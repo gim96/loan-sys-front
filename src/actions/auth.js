@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { getSource } from "../pages/db/server";
+import {token_header} from "../utils/tokenHeader";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
@@ -62,14 +63,28 @@ export function loginUser(creds) {
             password: creds.password,
           },
           auth_type:'password'
-          
         })
         .then((response) => {
           console.log(response);
           if (response.data.success === true) {
+
             localStorage.setItem("user_token", response.data.payload.access_token);
             localStorage.setItem("authenticated", true);
-            window.location.reload(true);
+            ///
+            axios.get(`${getSource()}/users/me`, token_header)
+            .then((resp) => {
+
+              const user = resp.data.payload && resp.data.payload[0];
+              localStorage.setItem("user", JSON.stringify(user));
+
+              window.location.reload(true);
+              
+            })  
+            .catch((err) => {
+                console.log(err);
+            })
+
+           
           }
         });
     } else {
