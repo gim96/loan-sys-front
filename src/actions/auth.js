@@ -70,21 +70,9 @@ export function loginUser(creds) {
 
             localStorage.setItem("user_token", response.data.payload.access_token);
             localStorage.setItem("authenticated", true);
-            ///
-            axios.get(`${getSource()}/users/me`, token_header)
-            .then((resp) => {
-
-              const user = resp.data.payload && resp.data.payload[0];
-              localStorage.setItem("user", JSON.stringify(user));
-
-              window.location.reload(true);
-              
-            })  
-            .catch((err) => {
-                console.log(err);
-            })
-
-           
+            console.log(response.data.payload)
+            localStorage.setItem("user", JSON.stringify(response.data.payload.user));
+            window.location.reload(true);
           }
         });
     } else {

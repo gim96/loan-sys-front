@@ -73,6 +73,7 @@ class Typography extends React.Component {
       show:false,
       orderNo:0,
       orderType:'',
+      dueDate:new Date()
     };
   }
 
@@ -169,7 +170,7 @@ class Typography extends React.Component {
   };
 
   addItem = () => {
-      // console.log(this.state);
+      // console.log(this.state.dueDate);
      
       if (this.state.itemCode !== "" && this.state.orderType !== "") {
 
@@ -223,6 +224,7 @@ class Typography extends React.Component {
       amount:this.state.total,
       advance:this.state.cash,
       subTotal:this.state.total * 1 - this.state.discount * 1, 
+      dueDate:this.state.dueDate,
     };
     
     if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
@@ -382,13 +384,15 @@ class Typography extends React.Component {
                         }
                         // onKeyUp={this.handleAmount}
                       />
+                      
+                        <Input type='date' onChange={(e) => this.setState({dueDate:e.target.value})} value={this.state.dueDate} />
                         <br />
                         <select className="form-control" onChange={(e) => this.setState({orderType:e.target.value})}>
                           <option value=''>--select---</option>
                           <option value='rent'>Rent</option>
                           <option value='booking'>Booking</option>
                         </select>
-                        <br />
+                        
                         <br />
                         <Button
                           className="btn btn-lg pt-3 pb-3"
