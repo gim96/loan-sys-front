@@ -56,6 +56,7 @@ const Items = function () {
   const [selectedFiles, setSelectedFiles] = useState([])
   const [imgLoading, setImgLoading] = useState(false)
   const [selectedImages, setSelectedImages] = useState([])
+  const [searchParams, setSearchParams] = useState([]) 
 
 
 
@@ -71,16 +72,16 @@ const Items = function () {
         console.log(err);
     })
 
-    axios.get(`${getSource()}/items/itemCodes`, token_header)
+    axios.get(`${getSource()}/items/searchParams`, token_header)
     .then((resp) => {
-        const arr = [];
+        // const arr = [];
         const items = resp.data.payload; 
-        items.map((item) => {
-            arr.push(item.itemCode);
-        })
-        console.log(arr)
-        setItemCodes(arr);
-        setActiveCount(arr.length)
+        // items.map((item) => {
+        //     arr.push(item.itemCode);
+        // })
+        console.log(items)
+        setSearchParams(items);
+        setActiveCount(items.length)
     })  
     .catch((err) => {
         console.log(err);
@@ -167,6 +168,28 @@ const _handleTextFieldItems = (e) => {
     // console.log(selItem)
     setCodeSearch(currCode);
 };
+
+const _handleTextFieldDescriptions = (e) => {
+  
+    const currCode = e.target.value;
+    // const selItem =  allItems.filter((item) => item.itemCode === currCode);
+    // if (selItem.length > 0) {
+    //     setSelectedItem(selItem);
+    // } else {
+
+    //     axios.get(`${getSource()}/items/byItemCode?itemCode=${currCode}`, token_header)
+    //     .then((resp) => {
+    //         setSelectedItem(resp.data.payload);
+    //     })  
+    //     .catch((err) => {
+    //         console.log(err);
+    //     })
+    // }
+    // // console.log(selItem)
+    setCodeSearch(currCode);
+};
+
+
 
 const handleCurrentItem = (item, type) => {
     console.log(item.images)
@@ -270,6 +293,43 @@ const handleDelete = () => {
 };
 
 
+    const colors = [
+        'black',
+        'white' ,
+        'green',
+        'light',
+        'Dark green',
+        'blue',
+        'light blue',
+        'dark blue' ,
+        'red',
+        'dark red', 
+        'light red', 
+        'yellow',
+        'purple',
+        'cream',
+        'gray'  ,
+        'ash'  ,
+        'light gray',  
+        'dark gray' ,
+        'pink',
+        'light pink',  
+        'dark pink'  ,
+        'gold'  ,
+        'maroon' , 
+        'brown'  ,
+        'light brown',  
+        'dark brown' 
+    ]
+
+    const types = [
+        'Sarong',
+        'Blazer',
+        'Shirt',
+        'Trouser',
+        'Waistcoat',
+        'Accessory'
+    ]
 
     return (
         <div>
@@ -277,15 +337,68 @@ const handleDelete = () => {
                 <Col lg={12} md={12} xs={12}>
                     <Card className="p-3 pl-3">
                         <Row>
-                            <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={4} md={4} xs={12}></Col>
-                            <Col lg={4} md={4} xs={12} align='right'>
+                            <Col lg={2} md={2} xs={12} className="pt-4">Filter</Col>
+                            <Col lg={10} md={10} xs={12} align='right'>
                                 <Stack direction='row' spacing={1}>
                                     <div className='w-100'>
                                         <Autocomplete
                                             id="free-solo-demo"
                                             freeSolo
-                                            options={itemCodes.map((option) => option)}
+                                            options={searchParams.map((option) => option.name)}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Description"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    placeholder="Search by description"
+                                                    onSelect={_handleTextFieldDescriptions}
+                                                    on
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                    <div className='w-100'>
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            options={types.map((option) => option)}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Cloth Type"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    placeholder="Search by Cloth Type"
+                                                    onSelect={_handleTextFieldItems}
+                                                    on
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                    <div className='w-100'>
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            options={colors.map((option) => option)}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Color"
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    placeholder="Search by Color"
+                                                    onSelect={_handleTextFieldItems}
+                                                    on
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                    <div className='w-100'>
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            options={searchParams.map((option) => option.itemCode)}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}

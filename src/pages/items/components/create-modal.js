@@ -101,6 +101,14 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate, on
                       <option>ash</option>  
                       <option>light gray</option>  
                       <option>dark gray</option> 
+                      <option>pink</option>  
+                      <option>light pink</option>  
+                      <option>dark pink</option>  
+                      <option>gold</option>  
+                      <option>maroon</option>  
+                      <option>brown</option>  
+                      <option>light brown</option>  
+                      <option>dark brown</option>  
                     </Input> 
                     <br />
                     Price
