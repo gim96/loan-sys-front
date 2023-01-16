@@ -196,8 +196,7 @@ const getPageData = (number) => {
                       ))}
                     </tbody>
                   </Table>
-                  {
-                    customers && customers.length > 19 &&
+                  
                     <table width="100%" className='float-right'>
                     <tr>
                       <td width="50%">
@@ -243,7 +242,6 @@ const getPageData = (number) => {
                       </td>
                     </tr>
                     </table>
-                  }
                   {/* <Pagination className="pagination-borderless" aria-label="Page navigation example">
                     <PaginationItem disabled={firstTableCurrentPage <= 0}>
                       <PaginationLink

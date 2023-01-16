@@ -76,7 +76,7 @@ export default function Typography() {
 
 
   useEffect(() => {
-
+    // console.log()
     axios.get(`${getSource()}/users/me`, token_header)
     .then((resp) => {
       setUser(resp.data.payload[0].name);
@@ -158,7 +158,7 @@ const _handleTextFieldItemCode = (e) => {
     if (e.target.value !== '') {
       axios.get(`${getSource()}/customers/customerByPhone?phone=${e.target.value}`, token_header)
       .then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           setCurrentCustomer(resp.data.payload[0]);
 
           // console.log(arr);
@@ -172,29 +172,29 @@ const _handleTextFieldItemCode = (e) => {
 
  const addItem = () => {
       // console.log(this.state.dueDate);
-     
-      if (itemCode !== "" && orderType !== "") {
+     console.log(items)
+      if (itemCode !== "") {
 
         const enterItem = items.filter((item) => item.itemCode === itemCode)
         if (enterItem.length > 0) {
             alert('this item already added.!')
         } else {
-          let items = this.state.items;
+          let _items = items;
 
-          items.push({
+          _items.push({
             itemCode:itemCode,
             description:currentItem.name,
             unit_price:currentItem.price,
-            quantity:quantity,
-            amount:currentItem.price * quantity
+            quantity: 1,
+            amount:currentItem.price * 1
           });
   
           let tot = 0;
-          items.map((item, i) => {
-            tot = tot + item.unit_price *  item.quantity
+          _items.map((item, i) => {
+            tot = tot + item.unit_price *  1
           })
     
-          setItems(items)
+          setItems(_items)
           setTotal(tot)
         }
        
@@ -212,6 +212,7 @@ const _handleTextFieldItemCode = (e) => {
   };
 
 const  saveOrder = () => {
+
     const curr_Status = orderType === 'rent' ? 2 : 1
     const data = {
       orderId:orderNo,
@@ -225,11 +226,11 @@ const  saveOrder = () => {
       dueDate:dueDate,
     };
     
-    if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
+    if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "" && orderType !== "") {
        
       axios.post(`${getSource()}/orders`, data, token_header)
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           if (data.orderType === 'rent') {
             window.location.href = '/#/menu/ongoing-orders'
           } else {
@@ -295,17 +296,14 @@ const  saveOrder = () => {
  const handleCash = (e) => {
     var currBal = e.target.value - subTotal;
     if (subTotal === 0) {
-
-      this.setState({
-        subTotal: total,
-        cash: e.target.value,
-        balance: currBal,
-      });
+      setSubTotal(total)
+      setCash(e.target.value)
+      setBalance(currBal)
+     
     } else {
-      this.setState({
-        cash: e.target.value,
-        balance: currBal,
-      });
+      setCash(e.target.value)
+      setBalance(currBal)
+      
     }
   };
 
@@ -317,9 +315,10 @@ const  saveOrder = () => {
       address:item.address,
       idPhoto:item.idPhoto,
     };
+
     axios.post(`${getSource()}/customers`, data, token_header)
     .then((resp) => {
-        getData();
+        // getData();
         setOpenCreate(false); 
     })
     .catch((err) => { 
@@ -369,7 +368,15 @@ const  saveOrder = () => {
                             </Button>
                           </div>
                       </Stack>
-                     
+                      <br />
+                      {/* <small style={{display:currentCustomer && currentCustomer.length === 0 ? 'none' : '', color:'red'}}>sds</small> */}
+                      <Input type='date' min={moment(new Date()).format('YYYY-MM-DD')} onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
+                        <br />
+                        <select className="form-control" onChange={(e) => setOrderType(e.target.value)}>
+                          <option value=''>--select---</option>
+                          <option value='rent'>Rent</option>
+                          <option value='booking'>Booking</option>
+                        </select>
                       <hr />
                       <Autocomplete
                         id="free-solo-demo"
@@ -404,16 +411,7 @@ const  saveOrder = () => {
                         }
                         // onKeyUp={this.handleAmount}
                       />
-                      
-                        <Input type='date' onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
-                        <br />
-                        <select className="form-control" onChange={(e) => setOrderType(e.target.value)}>
-                          <option value=''>--select---</option>
-                          <option value='rent'>Rent</option>
-                          <option value='booking'>Booking</option>
-                        </select>
-                        
-                        <br />
+                     
                         <Button
                           className="btn btn-lg pt-3 pb-3"
                           color='primary'
@@ -430,9 +428,9 @@ const  saveOrder = () => {
                         </Card>
                     </Col>
                     <Col lg={8}>
-                      <Card className="pt-2 pl-4 pr-4 pb-2" style={{height:'calc(100% - 2.2rem)'}}>
-                        
-                    <ListGroup flush>
+                      <Card className="pt-4 pl-4 pr-4 pb-2" style={{height:'calc(100% - 2.2rem)'}}>
+                      
+                    <ListGroup>
                       {
                         currentCustomer &&
                         <ListGroupItem>
@@ -452,7 +450,7 @@ const  saveOrder = () => {
                                   height='75px' 
                                   src={currentCustomer.idPhoto} 
                                   onClick={() => setShowPhoto(true)} 
-                                  alt="User"
+                                
                                 />
                               }
                             
@@ -461,12 +459,13 @@ const  saveOrder = () => {
                         </ListGroupItem>
                       }
                    
-                      <br />
+                     
                       </ListGroup>
+                      <br />
                       {/*  */}
                       {
                         currentItem && 
-                        <ListGroup flush>
+                        <ListGroup>
                         <ListGroupItem>
                           <Row>
                               <Col>Item Code</Col>
@@ -486,52 +485,31 @@ const  saveOrder = () => {
                             </Row>
                           </ListGroupItem>
                           <ListGroupItem>
-                          <Row>
+                            <Row>
                               <Col>Size</Col>
                               <Col align='right'>{currentItem.type}</Col>
                             </Row>
                           </ListGroupItem>
+                          <ListGroupItem>
+                            <Row>
+                              <Col>Color</Col>
+                              <Col align='right'>{currentItem.color}</Col>
+                            </Row>
+                          </ListGroupItem>
+                          <ListGroupItem>
+                            <Row>
+                              <Col>Rental Price</Col>
+                              <Col align='right'>{currentItem.price}</Col>
+                            </Row>
+                          </ListGroupItem>
                         </ListGroup>
                       }
-                    
-
-                      {
-                        currentItem &&
-                        <CardBody>
-                          <Row>
-                            <Col>
-                              Color <br />
-                              <small>{GetColorName(`${currentItem.color}`)}</small>
-                              </Col>
-                              <Col align='right'>
-                            <Badge className="p-4" style={{backgroundColor:currentItem.color}} pill> </Badge>
-
-                          </Col>
-                          
-                        </Row>
-                    </CardBody>
-                      }
-                    
-           
-                      <ListGroup flush>
-                    <ListGroupItem>
-                      <Row>
-                          <Col>Stock</Col>
-                          {/* <Col align='right'>{this.state.currentStock.quantity}</Col> */}
-                        </Row>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                      <Row>
-                          <Col>Rental Price</Col>
-                          {/* <Col align='right'>{this.state.currentStock.rentalPrice}.00 LKR</Col> */}
-                        </Row>
-                      </ListGroupItem>
-                      </ListGroup>
+                
                       </Card>
                     </Col>
                   </Row>
                   <Row>
-                    <Col xs={12} sm={12} xl={12}>
+                    <Col lg={12} md={12} xs={12}>
                       <hr />
                     </Col>
                   </Row>
@@ -553,7 +531,7 @@ const  saveOrder = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {items.map((data, index) => {
+                          {items && items.map((data, index) => {
                             return (
                               <tr>
                                 <td align="center" width="5%">
@@ -1054,7 +1032,7 @@ const  saveOrder = () => {
           </body>
           {/* NIC modal */}
 
-        <Modal isOpen={showPhoto} toggle={() => this.setState({showPhoto:false})} >
+        <Modal isOpen={showPhoto} toggle={() => setShowPhoto(false)} >
           <ModalHeader>NIC</ModalHeader>
           <ModalBody>
             {
@@ -1069,8 +1047,9 @@ const  saveOrder = () => {
       </Modal>
         <CreateModal
             openCreate={openCreate} 
-            setOpenCreate={openCreate}
+            setOpenCreate={setOpenCreate}
             handleCreate={handleCreate}
+            enhone={phone}
          />
         </div>
       );

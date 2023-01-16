@@ -229,6 +229,7 @@ const handleDelete = () => {
                 openCreate={openCreate} 
                 setOpenCreate={setOpenCreate}
                 handleCreate={handleCreate}
+                enPhone={null}
             />
             <ViewModal 
                 openView={openView} 

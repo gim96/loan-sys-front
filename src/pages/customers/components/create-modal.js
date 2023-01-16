@@ -6,7 +6,7 @@ import { getSource } from "../../db/server";
 import { token_header } from "../../../utils/tokenHeader";
 import firebase from "../../../pages/db/firebase";
 
-export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
+export default function CreateModal({openCreate, setOpenCreate, handleCreate, enPhone}) {
 
     const [phone, setPhone] = useState("");
     const [name, setName] = useState("");
@@ -17,7 +17,7 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
     const handleSave = () => {
      
       const item = {
-        phone:phone,
+        phone:enPhone !== null ? enPhone : phone,
         name:name,
         address:address,
         idPhoto:idPhoto,
@@ -72,9 +72,11 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
 
     };
 
+    // const path = window.location.pathname
+
     return(
         <Modal size='md' isOpen={openCreate}>
-       
+        
         {
            imageLoading ? (
            <div style={{padding:150, paddingLeft:'230px'}}>
@@ -82,12 +84,12 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
            </div>
            ) : (
             <div> 
-            <ModalHeader toggle={() => setOpenCreate(false)}><EditIcon />&nbsp; Add Customer details</ModalHeader>
+            <ModalHeader toggle={() => setOpenCreate(false)}><EditIcon />&nbsp; Add New Customer</ModalHeader>
             <ModalBody className="p-5" > 
             <Row>
-                <Col >
+                <Col>
                   Phone
-                  <Input type="text" onChange={(e) => setPhone(e.target.value)} value={phone} />
+                  <Input type="number" onChange={(e) => setPhone(e.target.value)} value={enPhone !== null ? enPhone : phone} />
                   <br />
                   Name
                   <Input type="text" onChange={(e) => setName(e.target.value)} value={name} />
@@ -98,7 +100,7 @@ export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
                   NIC Photo
                   <Input type="file" onChange={handlePhoto} />
                   <br />
-                  <img src={idPhoto} width='150px' height='80px' alt='img' />
+                  <img src={idPhoto} width='150px' height='80px' />
                 </Col>
             </Row>
             <hr />

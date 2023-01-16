@@ -146,7 +146,8 @@ const handleViewModal = (item) => {
                       <th className="w-10">Order Type</th>
                       <th className="w-10">Amount</th>
                       <th className="w-10">Date</th>
-                      <th className="w-20" align="right">Actions</th>
+                      <th className="w-10">Due Date</th>
+                      <th className="w-15" align="right">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -166,6 +167,7 @@ const handleViewModal = (item) => {
                           <td align='left'>{item.orderType === 'rent' ? 'Rent' : 'Booking'}</td>
                           <td align='right'>{Math.round(item.subTotal).toFixed(2)}</td>
                           <td>{moment(item.createdAt).format('YYYY-MM-DD h:mm A')}</td>
+                          <td>{item.dueDate}</td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleViewModal(item)}>
                                 <VisibilityIcon fontSize="inherit" />
