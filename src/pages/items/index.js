@@ -20,6 +20,7 @@ import firebase from "firebase";
 import fileUrl from 'file-url';
 import { Base64 } from 'js-base64';
 import { Stack } from "@mui/material";
+import Select from 'react-select';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -58,7 +59,17 @@ const Items = function () {
   const [selectedImages, setSelectedImages] = useState([])
   const [searchParams, setSearchParams] = useState([]) 
 
+  const [description, setDescription] = useState('')
+  const [clothType, setClothType] = useState('')
+  const [color, setColor] = useState('')
+  const [itemCode, setItemCode] = useState('')
 
+  const [itemCodeList, setItemCodeList] = useState([])
+  const [descriptionList, setDescriptionList] = useState([])
+  const [clothTypeList, setClothTypeList] = useState([])
+  const [colorList, setColorList] = useState([])
+
+  const [isClearable, setIsClearable] = useState(true);
 
   async function getData() {
     
@@ -66,7 +77,6 @@ const Items = function () {
     axios.get(`${getSource()}/items`, token_header)
     .then((resp) => {
         setActivePhone(resp.data.payload);
-      
     })  
     .catch((err) => {
         console.log(err);
@@ -76,12 +86,14 @@ const Items = function () {
     .then((resp) => {
         // const arr = [];
         const items = resp.data.payload; 
-        // items.map((item) => {
-        //     arr.push(item.itemCode);
-        // })
-        console.log(items)
+        // console.log(items)
         setSearchParams(items);
         setActiveCount(items.length)
+        const arrCodes = items.map((data) => ({label:data.itemCode,value:data.itemCode}))
+        const arrDescription = items.map((data) => ({label:data.name,value:data.name}))
+        setItemCodeList(arrCodes)
+        setDescriptionList(arrDescription)
+        
     })  
     .catch((err) => {
         console.log(err);
@@ -89,7 +101,7 @@ const Items = function () {
 
     axios.get(`${getSource()}/items?page=1&limit=20`, token_header)
     .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         setItems(resp.data.payload);
         setAllItems(resp.data.payload);
         setLoading(false);
@@ -102,7 +114,7 @@ const Items = function () {
 
   useEffect(() => {
     const imgg = fileUrl('196468021_5771315759606282_1398966008318955929_n (1) (1).jpg');
-    console.log(imgg)
+    // console.log(imgg)
     getData();
   }, []);
 
@@ -111,7 +123,6 @@ const Items = function () {
   }
 
   const removeImage = async() => {
-
     await firebase.storage().ref('url').delete()
   }
 
@@ -208,15 +219,6 @@ const handleCurrentItemDelete = (item) => {
     setOpenDelete(true);
 };
 
-const handleSearch = () => {
-
-    if (codeSearch !== "") {
-        setItems(selectedItem);
-    } else {
-        setItems(allItems);
-    }
-    
-};
 
 const handleCreate = (item) => {
 
@@ -294,42 +296,68 @@ const handleDelete = () => {
 
 
     const colors = [
-        'black',
-        'white' ,
-        'green',
-        'light',
-        'Dark green',
-        'blue',
-        'light blue',
-        'dark blue' ,
-        'red',
-        'dark red', 
-        'light red', 
-        'yellow',
-        'purple',
-        'cream',
-        'gray'  ,
-        'ash'  ,
-        'light gray',  
-        'dark gray' ,
-        'pink',
-        'light pink',  
-        'dark pink'  ,
-        'gold'  ,
-        'maroon' , 
-        'brown'  ,
-        'light brown',  
-        'dark brown' 
+        {label:'black',value:'black'},
+        {label:'white', value:'white'} ,
+        {label:'green', value:'green'},
+        {label:'light', value:'light'},
+        {label:'Dark green', value:'Dark green'},
+        {label:'blue', value:'blue'},
+        {label:'light blue', value:'light blue'},
+        {label:'dark blue', value:'dark blue'} ,
+        {label:'red', value:'red'},
+        {label:'dark red', value:'dark red'}, 
+        {label:'light red', value:'light red'}, 
+        {label:'yellow', value:'yellow'},
+        {label:'purple', value:'purple'},
+        {label:'cream', value:'cream'},
+        {label:'gray' , value:'gray'},
+        {label:'ash', value:'ash'},
+        {label:'light gray', value:'light gray'},  
+        {label:'dark gray', value:'dark gray'},
+        {label:'pink',value:'pink'},
+        {label:'light pink', value:'light pink'},  
+        {label:'dark pink', value:'dark pink'},
+        {label:'gold', value:'gold'},
+        {label:'maroon', value:'maroon'}, 
+        {label:'brown', value:'brown'},
+        {label:'light brown', value:'light brown'},  
+        {label:'dark brown', value:'dark brown'} 
     ]
 
     const types = [
-        'Sarong',
-        'Blazer',
-        'Shirt',
-        'Trouser',
-        'Waistcoat',
-        'Accessory'
+        {label:'Sarong', value:'Sarong'},
+        {label:'Blazer', value:'Blazer'},
+        {label:'Shirt', value:'Shirt'},
+        {label:'Trouser', value:'Trouser'},
+        {label:'Waistcoat', value:'Waistcoat'},
+        {label:'Accessory', value:'Accessory'}
     ]
+
+    const handleSearch = () => {
+
+        const data = {
+            itemCode:itemCode ? itemCode.value : '',
+            description:description ? description.value : '',
+            clothType:clothType ? clothType.value : '',
+            color:color ? color.value : ''
+        }
+        console.log(data)
+        axios.post(`${getSource()}/items/search`, {data}, token_header)
+        .then((resp) => {
+            const data = resp.data.payload
+            setItems(data);
+            setAllItems(data);
+            setActiveCount(data)
+            // console.log(resp.data)
+        })  
+        .catch((err) => {
+            console.log(err);
+        })
+
+     
+    };
+
+    
 
     return (
         <div>
@@ -337,85 +365,66 @@ const handleDelete = () => {
                 <Col lg={12} md={12} xs={12}>
                     <Card className="p-3 pl-3">
                         <Row>
-                            <Col lg={2} md={2} xs={12} className="pt-4">Filter</Col>
+                            <Col lg={2} md={2} xs={12} className='pt-1'>Filter</Col>
                             <Col lg={10} md={10} xs={12} align='right'>
                                 <Stack direction='row' spacing={1}>
                                     <div className='w-100'>
-                                        <Autocomplete
-                                            id="free-solo-demo"
-                                            freeSolo
-                                            options={searchParams.map((option) => option.name)}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Description"
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    placeholder="Search by description"
-                                                    onSelect={_handleTextFieldDescriptions}
-                                                    on
-                                                />
-                                            )}
+                                        <Select
+                                            value={description}
+                                            defaultValue={{label:'', value:''}}
+                                            onChange={(value) => setDescription(value)}
+                                            options={descriptionList}
+                                            className='text-left'
+                                            placeholder='Description'
+                                            isClearable={true}
                                         />
                                     </div>
                                     <div className='w-100'>
-                                        <Autocomplete
-                                            id="free-solo-demo"
-                                            freeSolo
-                                            options={types.map((option) => option)}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Cloth Type"
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    placeholder="Search by Cloth Type"
-                                                    onSelect={_handleTextFieldItems}
-                                                    on
-                                                />
-                                            )}
+                                        <Select
+                                            value={clothType}
+                                            defaultValue={{label:'', value:''}}
+                                            onChange={(value) => setClothType(value)}
+                                            options={types}
+                                            className='text-left'
+                                            placeholder='Cloth type'
+                                            isClearable={true}
                                         />
                                     </div>
                                     <div className='w-100'>
-                                        <Autocomplete
-                                            id="free-solo-demo"
-                                            freeSolo
-                                            options={colors.map((option) => option)}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Color"
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    placeholder="Search by Color"
-                                                    onSelect={_handleTextFieldItems}
-                                                    on
-                                                />
-                                            )}
+                                        
+                                        <Select
+                                            value={color}
+                                            defaultValue={{label:'', value:''}}
+                                            onChange={(value) => setColor(value)}
+                                            options={colors}
+                                            className='text-left'
+                                            placeholder='Color'
+                                            isClearable={true}
                                         />
                                     </div>
                                     <div className='w-100'>
-                                        <Autocomplete
-                                            id="free-solo-demo"
-                                            freeSolo
-                                            options={searchParams.map((option) => option.itemCode)}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Item Code"
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    placeholder="Search by Phone no"
-                                                    onSelect={_handleTextFieldItems}
-                                                    on
-                                                />
-                                            )}
+                                        <Select
+                                            value={itemCode}
+                                            defaultValue={{label:'', value:''}}
+                                            onChange={(value) => setItemCode(value)}
+                                            options={itemCodeList}
+                                            className='text-left'
+                                            placeholder='Item Code'
+                                            isClearable={true}
                                         />
                                     </div>
-                                    <div className='pt-3'>
-                                        <Button className='p-3 float-center pl-4 pr-4' color='primary' onClick={handleSearch}>
+                                    <div>
+                                        <Button color='primary' className='pl-3 pr-3' onClick={handleSearch}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                            </svg>
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <Button color='secondary' className='pl-3 pr-3' onClick={getData}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
                                             </svg>
                                         </Button>
                                     </div>
@@ -433,16 +442,25 @@ const handleDelete = () => {
                             isLoading ? <Skeleton height={250} /> : (
                                 <div>
                                      <div className="p-1" style={{ width: '100%' }}>
-                                        <Table 
-                                            customers={items} 
-                                            setCustomers={setItems}
-                                            setLoading={setLoading}
-                                            handleCurrentItem={handleCurrentItem}
-                                            handleCurrentItemDelete={handleCurrentItemDelete}
-                                            activeCount={activeCount}
-                                            setOpenCreate={setOpenCreate}
-                                            setOpenView={setOpenView}
-                                        />
+                                        {
+                                            items && items.length > 0 &&
+                                            <Table 
+                                                customers={items} 
+                                                setCustomers={setItems}
+                                                setLoading={setLoading}
+                                                handleCurrentItem={handleCurrentItem}
+                                                handleCurrentItemDelete={handleCurrentItemDelete}
+                                                activeCount={activeCount}
+                                                setOpenCreate={setOpenCreate}
+                                                setOpenView={setOpenView}
+                                            />
+
+                                            ||
+
+                                            <Card className="p-5 text-center" >No data available.!</Card>
+
+                                         }
+                                       
                                     </div>
                                     <br />
                                 </div>

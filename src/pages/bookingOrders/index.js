@@ -331,15 +331,15 @@ const handleSearchByDate = () => {
                                         {
                                               (orders && orders.length > 0 &&
                                                 <Table 
-                                                orders={orders} 
-                                                setOrders={setOrders}
-                                                setLoading={setLoading}
-                                                handleCurrentItem={handleCurrentItem}
-                                                handleCurrentItemDelete={handleCurrentItemDelete}
-                                                activeCount={activeCount}
-                                                setOpenCreate={setOpenCreate}
-                                                setOpenView={setOpenView}
-                                                handleView={handleView}
+                                                    orders={orders} 
+                                                    setOrders={setOrders}
+                                                    setLoading={setLoading}
+                                                    handleCurrentItem={handleCurrentItem}
+                                                    handleCurrentItemDelete={handleCurrentItemDelete}
+                                                    activeCount={activeCount}
+                                                    setOpenCreate={setOpenCreate}
+                                                    setOpenView={setOpenView}
+                                                    handleView={handleView}
                                             />)
 
                                             ||

@@ -156,7 +156,7 @@ const getPageData = (number) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {customers
+                    {customers && customers.length > 0 && customers
                       .map((item, i) => (
                        
                         <tr key={uuidv4()}>
@@ -175,7 +175,7 @@ const getPageData = (number) => {
                             <span>{item.color}</span>
                           {/* <span class="badge badge-secondary pl-3 pr-3" style={{backgroundColor:`${item.color}`}}>&nbsp; </span> */}
                           </td>
-                          <td>{item.images.length ? (<img src={item.images[0]} width='25px' height='25px' style={{objectFit:'cover', borderRadius:'5px'}} />) : ''}</td>
+                          <td>{item.images && item.images.length ? (<img src={item.images[0]} width='25px' height='25px' style={{objectFit:'cover', borderRadius:'5px'}} />) : ''}</td>
                           <td>{item.price}.00</td>
                           <td>
                             {item.status === 0 ? (<Badge color='danger'>Out of Stock</Badge>) : (item.status === 1 ? <Badge color='success'>In Stock</Badge> : <Badge color='warning'>Booked</Badge>)}
@@ -196,7 +196,9 @@ const getPageData = (number) => {
                       ))}
                     </tbody>
                   </Table>
-                  <table width="100%" className='float-right'>
+                  {
+                    customers && customers.length > 19 &&
+                    <table width="100%" className='float-right'>
                     <tr>
                       <td width="50%">
                         {currentPage} Page(s) of {pageCount.length}
@@ -240,7 +242,8 @@ const getPageData = (number) => {
                         {/* </nav> */}
                       </td>
                     </tr>
-                  </table>
+                    </table>
+                  }
                   {/* <Pagination className="pagination-borderless" aria-label="Page navigation example">
                     <PaginationItem disabled={firstTableCurrentPage <= 0}>
                       <PaginationLink

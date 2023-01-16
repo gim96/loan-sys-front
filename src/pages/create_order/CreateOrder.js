@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {  Col, Input, Row, Modal,
    Button, CardBody,
   ListGroup ,ListGroupItem,Badge, CardText, Card,  ModalHeader, ModalBody, ModalFooter } from "reactstrap";
@@ -15,6 +15,8 @@ import $ from "jquery";
 import { GetColorName } from 'hex-color-to-color-name';
 import avatar from "../../assets/tables/avatar.png";
 import logo from "../../assets/logo.png"
+import { Stack } from "@mui/system";
+import CreateModal from "../customers/components/create-modal"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,66 +31,62 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-class Typography extends React.Component {
+export default function Typography() {
   // const classes = useStyles();
+    
+    const [customerCode, setCustomerCode] = useState('')
+    const [date, setDate] = useState('')
+    const [itemCodes, setItemCodes] = useState([])
+    const [itemName, setItemName] = useState('')
 
-  constructor(props) {
-    super(props);
+    const [customerPhone, setCustomerPhone] = useState([])
+    const [phone, setPhone] = useState('')
+    const [currentCustomer, setCurrentCustomer] = useState([])
 
-    this.state = {
-      customerCode: "",
-      date: "",
-      itemCodes:[],
-      itemName: "",
+    const [total, setTotal] = useState(0)
 
-      customerPhone:[],
-      phone:'',
-      currentCustomer:[],
-      // unitPrice: "",
-      total: 0,
+    const [description, setDescription] = useState('')
+    const [brand, setBrand] = useState('')
+    const [unitPrice, setUnitPrice] = useState('')
+    const [quantity, setQuantity] =  useState('')
+    const [amount, setAmount] = useState('') 
+  
 
-      description: "",
-      brand: "",
-      unitPrice: "",
-      quantity: "1",
-      amount: "",
-      // user: [],
-
-      itemCode: "",
-      currentItem: [],
-      currentStock:[],
-      stock: [],
-      currentOrder: 0,
-      orderId: 0,
+    const [itemCode, setItemCode] = useState('')
+    const [currentItem, setCurrentItem] = useState([])
+    const [currentStock, setCurrentStock] = useState([])
+    const [stock, setStock] = useState([])
+    const [currentOrder, setCurrentOrder] = useState(0)
+    const [orderId, setOrderId]  = useState(0)
       //
-      advance: 0,
-      discount: 0,
-      subTotal: 0,
-      cash: 0,
-      balance: 0,
-      user:'',
-      items: [],
-      loading: false,
-      showPhoto: false,
-      show:false,
-      orderNo:0,
-      orderType:'',
-      dueDate:new Date()
-    };
-  }
+    const [advance, setAdvance] = useState(0)
+    const [discount, setDiscount] = useState(0)
+    const [subTotal, setSubTotal] = useState(0)
+    const [cash, setCash] = useState(0)
+    const [ balance, setBalance] = useState(0)
+    const [user, setUser] = useState('')
+    const [items, setItems] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [showPhoto, setShowPhoto] = useState(false)
+    const [show, setShow] =  useState(false)
+    const [orderNo, setOrderNo] = useState(0)
+    const [orderType, setOrderType] = useState('')
+    const [dueDate, setDueDate] = useState(new Date())
+    const [openCreate, setOpenCreate] = useState(false)
 
 
-  componentDidMount() {
+  useEffect(() => {
+
     axios.get(`${getSource()}/users/me`, token_header)
     .then((resp) => {
-      this.setState({user:resp.data.payload[0].name});
+      setUser(resp.data.payload[0].name);
     })  
     .catch((err) => {
         console.log(err);
     })
     axios.get(`${getSource()}/orders/count`, token_header)
     .then((resp) => {
-      this.setState({orderNo:(resp.data.payload.count + 1000 + 1)});
+      setOrderNo(resp.data.payload.count + 1000 + 1);
     })  
     .catch((err) => {
         console.log(err);
@@ -97,9 +95,8 @@ class Typography extends React.Component {
 
     axios.get(`${getSource()}/customers/active-phone`, token_header)
     .then((resp) => {
-    
         // customerPhone(resp);
-        this.setState({customerPhone:resp.data.payload});
+        setCustomerPhone(resp.data.payload);
         // console.log(arr);
     })  
     .catch((err) => {
@@ -113,7 +110,7 @@ class Typography extends React.Component {
         actualItems.map((item) => {
             arr.push(item.itemCode);
         })
-        this.setState({itemCodes:arr});
+        setItemCodes(arr);
         // console.log(arr);
     })  
     .catch((err) => {
@@ -121,27 +118,31 @@ class Typography extends React.Component {
     })
   
     $("#free-solo-demo").focus();
-  }
 
-  handleClose = () => this.setState({ show: false });
-  handleShow = () =>{
+  }, []);
+   
+  
+
+ const handleClose = () => this.setState({ show: false });
+ const handleShow = () =>{
+   
     this.setState({ show: true });
     // window.print();
     
    
   } 
 
-  _handleTextFieldItemCode = (e) => {
-    // this.setState({ loading: true });
-    if (this.state.itemCodes && this.state.itemCodes.length > 0) {
+const _handleTextFieldItemCode = (e) => {
 
-        this.setState({ itemCode: e.target.value });
+    // this.setState({ loading: true });
+    if (itemCodes && itemCodes.length > 0) {
+
+        setItemCode(e.target.value);
         const _itemCode = e.target.value;
         if (e.target.value !== "") {
           axios.get(`${getSource()}/items/byItemCode?itemCode=${_itemCode}`, token_header)
           .then((resp) => {
-            this.setState({currentItem:resp.data.payload[0]});
-
+            setCurrentItem(resp.data.payload[0])
         })  
         .catch((err) => {
             console.log(err);
@@ -152,13 +153,13 @@ class Typography extends React.Component {
     
   };
 
-  _handleTextFieldCustomerPhone = (e) => {
-    this.setState({phone:e.target.value});
+ const _handleTextFieldCustomerPhone = (e) => {
+    setPhone(e.target.value);
     if (e.target.value !== '') {
       axios.get(`${getSource()}/customers/customerByPhone?phone=${e.target.value}`, token_header)
       .then((resp) => {
           console.log(resp)
-          this.setState({currentCustomer:resp.data.payload[0]});
+          setCurrentCustomer(resp.data.payload[0]);
 
           // console.log(arr);
       })  
@@ -169,62 +170,59 @@ class Typography extends React.Component {
     
   };
 
-  addItem = () => {
+ const addItem = () => {
       // console.log(this.state.dueDate);
      
-      if (this.state.itemCode !== "" && this.state.orderType !== "") {
+      if (itemCode !== "" && orderType !== "") {
 
-        const enterItem = this.state.items.filter((item) => item.itemCode === this.state.itemCode)
+        const enterItem = items.filter((item) => item.itemCode === itemCode)
         if (enterItem.length > 0) {
             alert('this item already added.!')
         } else {
           let items = this.state.items;
 
           items.push({
-            itemCode:this.state.itemCode,
-            description:this.state.currentItem.name,
-            unit_price:this.state.currentItem.price,
-            quantity:this.state.quantity,
-            amount:this.state.currentItem.price * this.state.quantity
+            itemCode:itemCode,
+            description:currentItem.name,
+            unit_price:currentItem.price,
+            quantity:quantity,
+            amount:currentItem.price * quantity
           });
   
           let tot = 0;
           items.map((item, i) => {
             tot = tot + item.unit_price *  item.quantity
           })
-          
-         
-          this.setState({items:items, total:tot})
+    
+          setItems(items)
+          setTotal(tot)
         }
        
          
       }
   }; 
 
-  deleteItem = (index) => {
-    // if(this.state.items.length===1){
-    //    this.state({discount:0,cash:0});
-    // }
-    var currTot = this.state.total - this.state.items[index].amount * 1;
-    this.state.items.splice(index, 1);
-    this.setState({
-      items: this.state.items,
-      total: currTot,
-    });
+ const deleteItem = (index) => {
+
+    var currTot = total - items[index].amount * 1;
+    items.splice(index, 1);
+    setItems(items)
+    setTotal(currTot)
+
   };
 
-  saveOrder = () => {
-    const curr_Status =  this.state.orderType === 'rent' ? 2 : 1
+const  saveOrder = () => {
+    const curr_Status = orderType === 'rent' ? 2 : 1
     const data = {
-      orderId:this.state.orderNo,
-      customerPhone: this.state.phone,
-      orderType:this.state.orderType,
+      orderId:orderNo,
+      customerPhone: phone,
+      orderType:orderType,
       status:curr_Status,
-      items:this.state.items,
-      amount:this.state.total,
-      advance:this.state.cash,
-      subTotal:this.state.total * 1 - this.state.discount * 1, 
-      dueDate:this.state.dueDate,
+      items:items,
+      amount:total,
+      advance:cash,
+      subTotal:total * 1 - discount * 1, 
+      dueDate:dueDate,
     };
     
     if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "") {
@@ -250,17 +248,17 @@ class Typography extends React.Component {
       
   };
 
-  goNextInput = (event) => {
+ const goNextInput = (event) => {
     if (event.code === "Enter") {
       $("#quantity").focus();
     }
   };
-  goNextUnitPrice = (event) => {
+ const goNextUnitPrice = (event) => {
     if (event.key === "Enter") {
       $("#unitprice").focus();
     }
   };
-  goNextAddBtn = (event) => {
+  const goNextAddBtn = (event) => {
     if (event.key === "Enter") {
       $("#addbtn").focus();
     }
@@ -269,7 +267,7 @@ class Typography extends React.Component {
       $("#free-solo-demo").focus();
     }
   };
-  goNextUpCode = (event) => {
+ const  goNextUpCode = (event) => {
     if (event.key.code === 56) {
       $("#free-solo-demo").focus();
     }
@@ -278,28 +276,28 @@ class Typography extends React.Component {
   
 
 
-  handleAmount = () => {
-    if (this.state.unitPrice !== "" && this.state.quantity !== "") {
+ const handleAmount = () => {
+    if (unitPrice !== "" && quantity !== "") {
       this.setState({
-        amount: this.state.unitPrice * this.state.quantity,
+        amount: unitPrice * quantity,
       });
     }
   };
 
-  handleDiscount = (e) => {
-    var currSubtotal = this.state.total - e.target.value;
-    this.setState({
-      discount: e.target.value,
-      subTotal: currSubtotal,
-    });
+ const handleDiscount = (e) => {
+    var currSubtotal = total - e.target.value;
+    setDiscount(e.target.value)
+    setSubTotal(currSubtotal)
+  
     // console.log(currSubtotal);
   };
 
-  handleCash = (e) => {
-    var currBal = e.target.value - this.state.subTotal;
-    if (this.state.subTotal === 0) {
+ const handleCash = (e) => {
+    var currBal = e.target.value - subTotal;
+    if (subTotal === 0) {
+
       this.setState({
-        subTotal: this.state.total,
+        subTotal: total,
         cash: e.target.value,
         balance: currBal,
       });
@@ -311,14 +309,24 @@ class Typography extends React.Component {
     }
   };
 
-  render() {
-    if (this.state.loading === true) {
-      return (
-        <div>
-          <div>Loading...</div>
-        </div>
-      );
-    } else {
+  const handleCreate = (item) => {
+
+    const data = {
+      phone:item.phone,
+      name: item.name,
+      address:item.address,
+      idPhoto:item.idPhoto,
+    };
+    axios.post(`${getSource()}/customers`, data, token_header)
+    .then((resp) => {
+        getData();
+        setOpenCreate(false); 
+    })
+    .catch((err) => { 
+      console.log(err);
+    });
+};
+
       return (
         <div>
           <body>
@@ -330,30 +338,43 @@ class Typography extends React.Component {
                       <Card className="p-4 pb" style={{height:'calc(100% - 2.2rem)'}}> 
 
                       <label className="form-label">Bill no</label>
-                      <p>{this.state.orderNo}</p>
+                      <p>{orderNo}</p>
                   
                       <br />
-                      <Autocomplete
-                        id="free-solo-demo"
-                        freeSolo
-                        options={this.state.customerPhone.map((option) => option)}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Cutomer Phone"
-                            margin="normal"
-                            variant="outlined"
-                            placeholder="Search by Phone no"
-                            onSelect={this._handleTextFieldCustomerPhone}
-                            // onChange={(e) => this.setState({itemCode:e.target.value})}
-                          />
-                        )}
-                      />
+                      <Stack direction='row' spacing={1}>
+                          <div className='w-100'>
+                            <Autocomplete
+                              id="free-solo-demo"
+                              freeSolo
+                              options={customerPhone.map((option) => option)}
+                              renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Cutomer Phone"
+                                margin="normal"
+                                variant="outlined"
+                                placeholder="Search by Phone no"
+                                onSelect={_handleTextFieldCustomerPhone}
+                                // onChange={(e) => this.setState({itemCode:e.target.value})}
+                              />
+                            )}
+                            />
+                          </div>
+                          <div className='pt-3'>
+                            <Button color='primary' className='pt-3 pb-3 pl-3 pr-3' onClick={() => setOpenCreate(true)}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                              </svg>
+                            </Button>
+                          </div>
+                      </Stack>
+                     
                       <hr />
                       <Autocomplete
                         id="free-solo-demo"
                         freeSolo
-                        options={this.state.itemCodes.map((option) => option)}
+                        options={itemCodes.map((option) => option)}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -361,7 +382,7 @@ class Typography extends React.Component {
                             margin="normal"
                             variant="outlined"
                             placeholder="Search by Phone no"
-                            onSelect={this._handleTextFieldItemCode}
+                            onSelect={_handleTextFieldItemCode}
                             // onChange={(e) => this.setState({itemCode:e.target.value})}
                           />
                         )}
@@ -370,7 +391,6 @@ class Typography extends React.Component {
                       <br />
                       <TextField 
                         hidden={true}
-                        
                         className="w-100"
                         id="outlined-basic" 
                         // variant="standard"  
@@ -378,16 +398,16 @@ class Typography extends React.Component {
                         label="Quantity" 
                       
                         // onKeyPress={this.goNextAddBtn}
-                        value={this.state.quantity}
+                        value={quantity}
                         onChange={(e) =>
-                          this.setState({ quantity: e.target.value })
+                          setQuantity(e.target.value)
                         }
                         // onKeyUp={this.handleAmount}
                       />
                       
-                        <Input type='date' onChange={(e) => this.setState({dueDate:e.target.value})} value={this.state.dueDate} />
+                        <Input type='date' onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
                         <br />
-                        <select className="form-control" onChange={(e) => this.setState({orderType:e.target.value})}>
+                        <select className="form-control" onChange={(e) => setOrderType(e.target.value)}>
                           <option value=''>--select---</option>
                           <option value='rent'>Rent</option>
                           <option value='booking'>Booking</option>
@@ -399,8 +419,8 @@ class Typography extends React.Component {
                           color='primary'
                           size='lg'
                           id="addbtn"
-                          onKeyPress={this.goNextUpCode}
-                          onClick={this.addItem}
+                          onKeyPress={goNextUpCode}
+                          onClick={addItem}
                         >
                           add item
                         </Button>
@@ -414,24 +434,24 @@ class Typography extends React.Component {
                         
                     <ListGroup flush>
                       {
-                        this.state.currentCustomer &&
+                        currentCustomer &&
                         <ListGroupItem>
                         <Row>
                             <Col lg={1} md={1}>
                               <img width='32px' height='32px' src={avatar} alt="User"/>
                             </Col>
                             <Col  lg={6}>
-                              <p className="h6"> {this.state.currentCustomer.name}</p>
-                              <p/>{this.state.currentCustomer.address}
+                              <p className="h6"> {currentCustomer.name}</p>
+                              <p/>{currentCustomer.address}
                             </Col>
                             <Col align='right' lg={5}>
                               {
-                                this.state.currentCustomer.name && 
+                                currentCustomer.name && 
                                 <img 
                                   width='150px' 
                                   height='75px' 
-                                  src={this.state.currentCustomer.idPhoto} 
-                                  onClick={() => this.setState({showPhoto:true})} 
+                                  src={currentCustomer.idPhoto} 
+                                  onClick={() => setShowPhoto(true)} 
                                   alt="User"
                                 />
                               }
@@ -445,30 +465,30 @@ class Typography extends React.Component {
                       </ListGroup>
                       {/*  */}
                       {
-                        this.state.currentItem && 
+                        currentItem && 
                         <ListGroup flush>
                         <ListGroupItem>
                           <Row>
                               <Col>Item Code</Col>
-                              <Col align='right'>{this.state.currentItem.itemCode && this.state.currentItem.itemCode}</Col>
+                              <Col align='right'>{currentItem.itemCode && currentItem.itemCode}</Col>
                             </Row>
                           </ListGroupItem>
                           <ListGroupItem>
                           <Row>
                               <Col>Description</Col>
-                              <Col align='right'>{this.state.currentItem.name}</Col>
+                              <Col align='right'>{currentItem.name}</Col>
                             </Row>
                           </ListGroupItem>
                           <ListGroupItem>
                           <Row>
                               <Col>Type</Col>
-                              <Col align='right'>{this.state.currentItem.type}</Col>
+                              <Col align='right'>{currentItem.type}</Col>
                             </Row>
                           </ListGroupItem>
                           <ListGroupItem>
                           <Row>
                               <Col>Size</Col>
-                              <Col align='right'>{this.state.currentItem.type}</Col>
+                              <Col align='right'>{currentItem.type}</Col>
                             </Row>
                           </ListGroupItem>
                         </ListGroup>
@@ -476,15 +496,15 @@ class Typography extends React.Component {
                     
 
                       {
-                        this.state.currentItem &&
+                        currentItem &&
                         <CardBody>
                           <Row>
                             <Col>
                               Color <br />
-                              <small>{GetColorName(`${this.state.currentItem.color}`)}</small>
+                              <small>{GetColorName(`${currentItem.color}`)}</small>
                               </Col>
                               <Col align='right'>
-                            <Badge className="p-4" style={{backgroundColor:this.state.currentItem.color}} pill> </Badge>
+                            <Badge className="p-4" style={{backgroundColor:currentItem.color}} pill> </Badge>
 
                           </Col>
                           
@@ -533,7 +553,7 @@ class Typography extends React.Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {this.state.items.map((data, index) => {
+                          {items.map((data, index) => {
                             return (
                               <tr>
                                 <td align="center" width="5%">
@@ -552,7 +572,7 @@ class Typography extends React.Component {
                                     fill="currentColor"
                                     class="bi bi-x-circle-fill"
                                     viewBox="0 0 16 16"
-                                    onClick={() => this.deleteItem(index)}
+                                    onClick={() => deleteItem(index)}
                                   >
                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
                                   </svg>
@@ -580,9 +600,9 @@ class Typography extends React.Component {
                               // max=''
                               className="form-control"
                               onChange={(e) =>
-                                this.setState({ discount: e.target.value })
+                                setDiscount(e.target.value)
                               }
-                              onKeyUp={this.handleDiscount}
+                              onKeyUp={handleDiscount}
                             />
                           </td>
                           <td>&nbsp;</td>
@@ -592,9 +612,9 @@ class Typography extends React.Component {
                               min={0}
                               className="form-control"
                               onChange={(e) =>
-                                this.setState({ cash: e.target.value })
+                                setCash(e.target.value)
                               }
-                              onKeyUp={this.handleCash}
+                              onKeyUp={handleCash}
                             />
                           </td>
                         </tr>
@@ -611,7 +631,7 @@ class Typography extends React.Component {
                                 <td align="right">
                                   <h5>
                                     
-                                    {(Math.round(this.state.total)).toFixed(2)} LKR
+                                    {(Math.round(total)).toFixed(2)} LKR
                                   </h5>
                                  
                                 </td>
@@ -623,7 +643,7 @@ class Typography extends React.Component {
                                 </td>
                                 <td align="right">
                                   <h5>
-                                    {Math.round(this.state.discount).toFixed(2)} LKR
+                                    {Math.round(discount).toFixed(2)} LKR
                                   </h5>
                                 </td>
                               </tr>
@@ -635,7 +655,7 @@ class Typography extends React.Component {
                                   <h5>
 
                                     {(
-                                      Math.round(this.state.total * 1 - this.state.discount * 1) 
+                                      Math.round(total * 1 - discount * 1) 
                                     ).toFixed(2)} LKR
                                   </h5>
                                 </td>
@@ -647,7 +667,7 @@ class Typography extends React.Component {
                                 <td align="right">
                                   <h5>
                                     
-                                    { Math.round(this.state.cash).toFixed(2)} LKR
+                                    { Math.round(cash).toFixed(2)} LKR
                                   </h5>
                                 </td>
                               </tr>
@@ -658,7 +678,7 @@ class Typography extends React.Component {
                                 <td align="right">
                                   <h5>
                                   
-                                    { Math.round(this.state.cash * 1 - (this.state.total * 1 - this.state.discount * 1)).toFixed(2)} LKR
+                                    { Math.round(cash * 1 - (total * 1 - discount * 1)).toFixed(2)} LKR
                                   </h5>
                                 </td>
                               </tr>
@@ -675,7 +695,7 @@ class Typography extends React.Component {
                             <td>
                               <button
                                 className="btn btn-lg btn-warning"
-                                onClick={() => this.setState({show:true})}
+                                onClick={() => setShow(true)}
                               >
                                 View print
                               </button>
@@ -689,7 +709,7 @@ class Typography extends React.Component {
                               &nbsp;
                               <button
                                 className="btn btn-lg btn-primary"
-                                onClick={this.saveOrder}
+                                onClick={saveOrder}
                                 
                               >
                                 Create order
@@ -700,7 +720,7 @@ class Typography extends React.Component {
                       </table>
                     </Col>
                   </Row>
-                  <Modal isOpen={this.state.show} toggle={() => this.setState({show:false})} >
+                  <Modal isOpen={show} toggle={() => setShow(false)} >
                    
                     <ModalBody>
                       {/* <section id="my_section"> */}
@@ -740,16 +760,16 @@ class Typography extends React.Component {
                                         <tr>
                                           <td>
                                             {" "}
-                                            user : {this.state.user}
+                                            user : {user}
                                           </td>
                                           <td align="right">
-                                            {this.state.date}
+                                            {date}
                                           </td>
                                         </tr>
                                         <tr>
                                           <td>
                                             Invoice no :{" "}
-                                            {this.state.orderId * 1 + 1}
+                                            {orderId * 1 + 1}
                                           </td>
                                         </tr>
                                       </table>
@@ -771,7 +791,7 @@ class Typography extends React.Component {
                                           <th><b>Qty</b></th>
                                           <th><b>Amount</b></th>
                                         </tr>
-                                        {this.state.items.map((data, index) => {
+                                        {items.map((data, index) => {
                                           return (
                                             <tr>
                                               <td align="center" width="5%">
@@ -799,31 +819,31 @@ class Typography extends React.Component {
                                         <tr>
                                           <td>Total</td>
                                           <td align="right">
-                                            {this.state.total} LKR
+                                            {total} LKR
                                           </td>
                                         </tr>
                                         <tr>
                                           <td>Discount</td>
                                           <td align="right">
-                                            {this.state.discount} LKR
+                                            {discount} LKR
                                           </td>
                                         </tr>
                                         <tr>
                                           <td className="text-bold">Sub total</td>
                                           <td align="right">
-                                            {this.state.subTotal} LKR
+                                            {subTotal} LKR
                                           </td>
                                         </tr>
                                         <tr>
                                           <td>Cash</td>
                                           <td align="right">
-                                            {this.state.cash} LKR
+                                            {cash} LKR
                                           </td>
                                         </tr>
                                         <tr>
                                           <td>Balance</td>
                                           <td align="right">
-                                            {this.state.balance} LKR
+                                            {balance} LKR
                                           </td>
                                         </tr>
                                       </table>
@@ -901,13 +921,13 @@ class Typography extends React.Component {
                                 <td>
                                   <table width="100%">
                                     <tr>
-                                      <td> user : {this.state.user.name}</td>
-                                      <td align="right">{this.state.date}</td>
+                                      <td> user : {user.name}</td>
+                                      <td align="right">{date}</td>
                                     </tr>
                                     <tr>
                                       <td>
                                         Invoice no :{" "}
-                                        {this.state.orderId * 1 + 1}
+                                        {orderId * 1 + 1}
                                       </td>
                                     </tr>
                                   </table>
@@ -947,7 +967,7 @@ class Typography extends React.Component {
                                         Amount
                                       </td>
                                     </tr>
-                                    {this.state.items.map((data, index) => {
+                                    {items.map((data, index) => {
                                       return (
                                         <tr>
                                           <td>{data.name}</td>
@@ -975,28 +995,28 @@ class Typography extends React.Component {
                                   <table width="100%">
                                     <tr>
                                       <td>Total</td>
-                                      <td align="right">{this.state.total}</td>
+                                      <td align="right">{total}</td>
                                     </tr>
                                     <tr>
                                       <td>Discount</td>
                                       <td align="right">
-                                        {this.state.discount}
+                                        {discount}
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>Sub total</td>
                                       <td align="right">
-                                        {this.state.subTotal}
+                                        {subTotal}
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>Cash</td>
-                                      <td align="right">{this.state.cash}</td>
+                                      <td align="right">{cash}</td>
                                     </tr>
                                     <tr>
                                       <td>Balance</td>
                                       <td align="right">
-                                        {this.state.balance}
+                                        {balance}
                                       </td>
                                     </tr>
                                   </table>
@@ -1034,25 +1054,24 @@ class Typography extends React.Component {
           </body>
           {/* NIC modal */}
 
-      <Modal isOpen={this.state.showPhoto} toggle={() => this.setState({showPhoto:false})} >
-        <ModalHeader>NIC</ModalHeader>
-        <ModalBody>
-              {
-                this.state.currentCustomer && 
+        <Modal isOpen={showPhoto} toggle={() => this.setState({showPhoto:false})} >
+          <ModalHeader>NIC</ModalHeader>
+          <ModalBody>
+            {
+                currentCustomer && 
                 <Col align="center">
-                  <img src={this.state.currentCustomer.idPhoto} width='100%' alt='NIC' />
+                  <img src={currentCustomer.idPhoto} width='100%' alt='NIC' />
                 </Col>
-              }
-            
+            }
         </ModalBody>
         <ModalFooter>
-        
         </ModalFooter>
       </Modal>
+        <CreateModal
+            openCreate={openCreate} 
+            setOpenCreate={openCreate}
+            handleCreate={handleCreate}
+         />
         </div>
       );
-    }
-  }
 }
-
-export default Typography;
