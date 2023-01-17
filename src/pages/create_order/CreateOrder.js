@@ -74,6 +74,18 @@ export default function Typography() {
     const [dueDate, setDueDate] = useState(new Date())
     const [openCreate, setOpenCreate] = useState(false)
 
+  function getCustomerPhone() {
+
+    axios.get(`${getSource()}/customers/active-phone`, token_header)
+    .then((resp) => {
+        // customerPhone(resp);
+        setCustomerPhone(resp.data.payload);
+        // console.log(arr);
+    })  
+    .catch((err) => {
+        console.log(err);
+    })
+  }
 
   useEffect(() => {
     // console.log()
@@ -92,16 +104,9 @@ export default function Typography() {
         console.log(err);
     })
     
+    
+   getCustomerPhone()
 
-    axios.get(`${getSource()}/customers/active-phone`, token_header)
-    .then((resp) => {
-        // customerPhone(resp);
-        setCustomerPhone(resp.data.payload);
-        // console.log(arr);
-    })  
-    .catch((err) => {
-        console.log(err);
-    })
     axios.get(`${getSource()}/items/itemCodes`, token_header)
     .then((resp) => {
         const arr = [];
@@ -319,6 +324,7 @@ const  saveOrder = () => {
     axios.post(`${getSource()}/customers`, data, token_header)
     .then((resp) => {
         // getData();
+        getCustomerPhone()
         setOpenCreate(false); 
     })
     .catch((err) => { 
@@ -1049,7 +1055,7 @@ const  saveOrder = () => {
             openCreate={openCreate} 
             setOpenCreate={setOpenCreate}
             handleCreate={handleCreate}
-            enhone={phone}
+            enPhone={phone}
          />
         </div>
       );
