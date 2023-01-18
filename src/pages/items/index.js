@@ -501,6 +501,7 @@ const handleDelete = () => {
                 currentItem={currentItem}
                 handleDelete={handleDelete}
             />
+           
          </div>
 
     );

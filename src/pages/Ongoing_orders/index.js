@@ -61,7 +61,7 @@ const OngoingOrders = function () {
     const [customerData, setCustomerData] = useState([])
 
   async function getData() {
-
+    //  console.log(moment(new Date()).format('YYYY-MM-DD'))
     axios.get(`${getSource()}/orders/pending?page=1&limit=20`, token_header)
     .then((resp) => {
         setOrders(resp.data.payload);
@@ -354,6 +354,7 @@ const handleSearchByDate = () => {
                 currentItem={currentOrder}
                 handleDelete={handleDelete}
             />
+           
          </div>
 
     );

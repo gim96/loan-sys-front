@@ -122,13 +122,23 @@ const getPageData = (number) => {
             <Col>
               {/* <Widget> */}
                 <div className={s.tableTitle}>
-                  <div className="headline-2">Items details</div>
-                  <div className="d-flex">
-                    <IconButton aria-label="delete" size="large" onClick={() => setOpenCreate(true)}>
-                        <AddCircleIcon fontSize="inherit" />
-                    </IconButton>
-                   
+                  <div className="headline-2 w-100">
+                    <Row>
+                      <Col lg={4} md={4} xs={4}>Items details</Col>
+                      <Col lg={8} md={8} xs={8} align='right'>
+                      <small className="text-dark">In-Stock</small>  <small className="text-success bg-success rounded">dsd</small>
+                      &nbsp;&nbsp;&nbsp;&nbsp; 
+                        <small className="text-dark">Booked</small>  <small className="text-warning bg-warning rounded">dsd</small>
+                        &nbsp;&nbsp;&nbsp;&nbsp; <small className="text-dark">Out of Stock</small>  <small className="text-danger bg-danger rounded">dsd</small>
+                        &nbsp;&nbsp; &nbsp;&nbsp;
+                        <svg style={{cursor:'hand'}} onClick={() => setOpenCreate(true)} xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                        </svg>
+                      </Col>
+                    
+                    </Row>
                   </div>
+                 
                 </div>
                 <div className="widget-table-overflow">
                   <Table className={`table-striped table-borderless table-hover ${s.statesTable}`} responsive>

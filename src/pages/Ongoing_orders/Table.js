@@ -48,6 +48,7 @@ useEffect(() => {
   const [firstTableCurrentPage, setFirstTableCurrentPage] = useState(0);
   const [secondTableCurrentPage, setSecondTableCurrentPage] = useState(0);
   const [tableDropdownOpen, setTableMenuOpen] = useState(false);
+  const currDate = moment(new Date()).format('YYYY-MM-DD')
 
   // const pageSize = 10;
   // const firstTablePagesCount = Math.ceil(activeCount / pageSize);
@@ -69,6 +70,8 @@ useEffect(() => {
     const currItem = orders[i];
     handleCurrentItemDelete(currItem);
  };    
+
+
 
 
 // 
@@ -119,7 +122,15 @@ const handleViewModal = (item) => {
             <Col>
               {/* <Widget> */}
                 <div className={s.tableTitle}>
-                  <div className="headline-2">Items details</div>
+                  <div className="headline-2 w-100 pr-0 pl-0">
+                    <Row>
+                      <Col lg={6} md={6} xs={6}>Items details</Col>
+                      <Col lg={6} md={6} xs={6} align='right'>
+                        <small>Expired due date</small>  <small className="text-danger bg-danger rounded">dsd</small>
+                        &nbsp;&nbsp;&nbsp;&nbsp; <small>Today due date</small>  <small className="text-warning bg-warning rounded">dsd</small>
+                      </Col>
+                    </Row>
+                  </div>
                   <div className="d-flex">
                     {/* <IconButton aria-label="delete" size="large" onClick={() => setOpenCreate(true)}>
                         <AddCircleIcon fontSize="inherit" />
@@ -130,7 +141,7 @@ const handleViewModal = (item) => {
                 <div className="widget-table-overflow">
                   <Table className={`table-striped table-borderless table-hover ${s.statesTable}`} responsive>
                     <thead>
-                    <tr>
+                    <tr className="border">
                       <th className={s.checkboxCol}>
                         <div className="checkbox checkbox-primary">
                           <input
@@ -154,8 +165,8 @@ const handleViewModal = (item) => {
                     {orders
                       .map((item, i) => (
                        
-                        <tr key={uuidv4()}>
-                          <td >
+                        <tr key={uuidv4()} >
+                          <td>
                             <div className="checkbox checkbox-primary">
                               {currentPage < 2 ? i+1 : (i + 1 + 20 * currentPage - 20)}
                             </div>
@@ -167,7 +178,11 @@ const handleViewModal = (item) => {
                           <td align='left'>{item.orderType === 'rent' ? 'Rent' : 'Booking'}</td>
                           <td align='right'>{Math.round(item.subTotal).toFixed(2)}</td>
                           <td>{moment(item.createdAt).format('YYYY-MM-DD h:mm A')}</td>
-                          <td>{item.dueDate}</td>
+                          <td> 
+                            <span className={item.dueDate === currDate ? 'bg-warning p-1 rounded' : (item.dueDate < currDate ? 'bg-danger p-1 rounded' : '')}>
+                              {item.dueDate}
+                            </span>
+                          </td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleViewModal(item)}>
                                 <VisibilityIcon fontSize="inherit" />

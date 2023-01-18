@@ -72,6 +72,7 @@ export default function Typography() {
     const [orderNo, setOrderNo] = useState(0)
     const [orderType, setOrderType] = useState('')
     const [dueDate, setDueDate] = useState(new Date())
+    const [bookingDate, setBookingDate] = useState(new Date())
     const [openCreate, setOpenCreate] = useState(false)
 
   function getCustomerPhone() {
@@ -229,6 +230,7 @@ const  saveOrder = () => {
       advance:cash,
       subTotal:total * 1 - discount * 1, 
       dueDate:dueDate,
+      bookingDate:orderType === 'booking' ? bookingDate : null
     };
     
     if (data.orderId !== "" && data.customerPhone !== "" && data.items.length > 0 && data.cash !== "" && orderType !== "") {
@@ -341,10 +343,8 @@ const  saveOrder = () => {
                   <Row>
                     <Col lg={4} md={4} xs={12} className="mb-5 mb-sm-0 ">
                       <Card className="p-4 pb" style={{height:'calc(100% - 2.2rem)'}}> 
-
                       <label className="form-label">Bill no</label>
                       <p>{orderNo}</p>
-                  
                       <br />
                       <Stack direction='row' spacing={1}>
                           <div className='w-100'>
@@ -374,16 +374,32 @@ const  saveOrder = () => {
                             </Button>
                           </div>
                       </Stack>
-                      <br />
-                      {/* <small style={{display:currentCustomer && currentCustomer.length === 0 ? 'none' : '', color:'red'}}>sds</small> */}
-                      <Input type='date' min={moment(new Date()).format('YYYY-MM-DD')} onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
-                        <br />
+                      <label className="pt-3">Order Type</label>
                         <select className="form-control" onChange={(e) => setOrderType(e.target.value)}>
                           <option value=''>--select---</option>
                           <option value='rent'>Rent</option>
                           <option value='booking'>Booking</option>
                         </select>
+                      {
+                        orderType === 'booking' &&
+                        <>
+                          <label className="pt-3">Booking Date</label>
+                          <Input type='date' min={moment(new Date()).format('YYYY-MM-DD')} onChange={(e) => setBookingDate(e.target.value)} value={dueDate} />
+                        </>
+
+                        ||
+
+                        <>
+                          <label className="pt-3">Due Date</label>
+                          <Input type='date' min={moment(new Date()).format('YYYY-MM-DD')} onChange={(e) => setDueDate(e.target.value)} value={dueDate} />
+                        </>
+                      }
+                      
+                   
+                       
+                       
                       <hr />
+
                       <Autocomplete
                         id="free-solo-demo"
                         freeSolo
