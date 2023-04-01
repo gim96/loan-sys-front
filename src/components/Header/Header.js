@@ -98,30 +98,8 @@ class Header extends React.Component {
     });
   }
 
-  componentDidMount() {
-    axios({
-      method: "GET",
-      url: getSource()+"/users/me",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user_token"),
-      },
-    }).then((response) => {
-      this.setState({ user: response.data.payload[0], loading: false });
-    }).catch((err)=>{
-       localStorage.removeItem('user_token');
-       localStorage.removeItem('authenticated');
-       window.location.reload(true);
-    });
-  }
-
   render() {
-    if (this.state.loading === true) {
-      return (
-        <div>
-          <div>Loading...</div>
-        </div>
-      );
-    } else {
+   
       return (
         <Navbar className={`${s.root} d-print-none`}>
           <div>
@@ -133,22 +111,7 @@ class Header extends React.Component {
               <MenuIcon className={s.menuIcon} />
             </NavLink>
           </div>
-          <Form className="d-none d-sm-block" inline>
-            <FormGroup>
-              <InputGroup className="input-group-no-border">
-                <Input
-                  id="search-input"
-                  placeholder="Search Dashboard"
-                  className="focus"
-                />
-                <InputGroupAddon addonType="prepend">
-                  <span>
-                    <SearchBarIcon />
-                  </span>
-                </InputGroupAddon>
-              </InputGroup>
-            </FormGroup>
-          </Form>
+         
           <Nav className="ml-auto">
             <NavItem className="d-sm-none mr-4">
               <NavLink className="" href="#">
@@ -182,7 +145,7 @@ class Header extends React.Component {
                   </svg>
                 </span>
                 <span className="small d-none d-sm-block ml-1 mr-2 body-1">
-                  Hi, {this.state.user.name}
+                  Hi, {JSON.parse(localStorage.getItem('user')).username}
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </DropdownToggle>
@@ -211,7 +174,7 @@ class Header extends React.Component {
           </Nav>
         </Navbar>
       );
-    }
+    
   }
 }
 

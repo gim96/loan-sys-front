@@ -22,110 +22,30 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggleOne = this.toggleOne.bind(this);
-    this.toggleTwo = this.toggleTwo.bind(this);
-    this.toggleThree = this.toggleThree.bind(this);
-
     this.state = {
-      dropdownOpenOne: false,
-      dropdownOpenTwo: false,
-      dropdownOpenThree: false,
-      checkboxes: [false, true],
-
-      pendingCount: 0,
-      totalCount: 0,
-      closedCount: 0,
-      pendingItemsCount: 0,
-      ClosedItemsCount: 0,
-      totalItemCount: 0,
-      paidAmount: 0,
-      toPaidAmount: 0,
-      amount: 0,
-
-      expenses: 0,
-      totalOrders:0,
-      rejectedOrders:0,
-      summery:[],
-
-      loading: false,
-      series: [
-            0, 
-            0,
-            0
-          ],
-            options: {
-              chart: {
-                type: 'donut',
-               
-              },
-              labels:['Booking','Pending','Closed'],
-              responsive: [{
-                breakpoint: 280,
-                options: {
-                  chart: {
-                    width: 25
-                  },
-                  legend: {
-                    position: 'bottom'
-                  }
-                }
-              }]
-            },
+      loan:[]
     };
   }
 
   meals = [meal1, meal2, meal3];
 
-  toggleOne() {
-    this.setState({
-      dropdownOpenOne: !this.state.dropdownOpenOne,
-    });
-  }
-
-  toggleTwo() {
-    this.setState({
-      dropdownOpenTwo: !this.state.dropdownOpenTwo,
-    });
-  }
-
-  toggleThree() {
-    this.setState({
-      dropdownOpenThree: !this.state.dropdownOpenThree,
-    });
-  }
-
-  changeCheck(event, checkbox, id) {
-    this.state[checkbox][id] = event.target.checked;
-
-    if (!event.target.checked) {
-      this.state[checkbox][id] = false;
-    }
-    this.setState({
-      [checkbox]: this.state[checkbox],
-    });
-  }
 
   getData() {
-    axios.get(`${getSource()}/orders/summery`, token_header)
-    .then((resp) => {
-        const allThreeOrders = [resp.data.payload.booking_orders, resp.data.payload.pending_orders, resp.data.payload.closed_orders]
-        this.setState({
-          summery:resp.data.payload, 
-          series:allThreeOrders
-        });
-        // setAllOrders(resp.data.payload);
-    })  
-    .catch((err) => {
-        console.log(err);
-    })
+    if (JSON.parse(localStorage.getItem('user')).role === 'customer') {
+        const user_id = JSON.parse(localStorage.getItem('user')).id
+        axios.get(`${getSource()}/loans/get-loan-by-userId/${user_id}`, token_header)
+        .then((resp) => {
+          this.setState({loan:resp.data})
+        })  
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+    
   }
 
   componentDidMount() {
-    // const userData = JSON.parse(localStorage.getItem('user'))
-    // if (window.location.pathname === '/#/menu/dashboard' && userData.role !== 'admin') {
-    //   window.location.href = '/#/menu/createOrder'
-    // }
-    this.getData();
+    this.getData()
   }
 
 
@@ -329,117 +249,96 @@ class Dashboard extends React.Component {
                 </Row>
   
                
-                <Row>
-                  <Col lg={6}>
-                    <Card className="p-5">
-                      <ReactApexChart options={this.state.options} series={this.state.series} type="donut" />
-                    </Card>
-                   
-                  </Col>
-                  <Col lg={6}>
-                    {/* <Row>
-                      <Col lg={6}>
-                        <Card className="p-5">
-                          <CheckroomIcon fontSize="55px" />
-                        </Card>
-                      </Col>
-                      <Col lg={6}>
-                        <Card className="p-5">
-                          fdf
-                        </Card>
-                      </Col>
-                    </Row>
-                    <br />
-                    <Row>
-                      <Col lg={6}>
-                        <Card className="p-5">
-                          fdf
-                        </Card>
-                      </Col>
-                      <Col lg={6}>
-                        <Card className="p-5">
-                          fdf
-                        </Card>
-                      </Col>
-                    </Row> */}
-                  </Col>
-                </Row>
+               
               </Col>
             </Row>
             ) : (
               <Row>
                 <Col lg={12}>
                   <hr />
-                  <h6 className='pl-1'>Quick Links</h6>
+                  <h6 className='pl-1'>Loan Details</h6>
                   <Row className='pt-1'>
-                      <Col lg={3} md={6} xs={12}>
-                      <Card style={{height:'calc(100% - 2.2rem)'}}>
-                        <CardBody>
-                          <CardTitle tag="h6"> Create an Order</CardTitle>
-                          <small>
-                            In create an order , you can create fresh orders (Bookings & regular orders) 
-                            </small>
-                         
-                          </CardBody>
-                          <CardFooter className='bg-white'>
-                          <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              GO
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </Col>
-                      <Col lg={3} md={6} xs={12}>
-                      <Card style={{height:'calc(100% - 2.2rem)'}}>
-                        <CardBody>
-                          <CardTitle tag="h6"> Booking Orders</CardTitle>
-                          <small>
-                            Booking orders contains all the pre-requested orders.
-                            </small>
-                         
-                          </CardBody>
-                          <CardFooter className='bg-white'>
-                          <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              GO
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </Col>
-                      <Col lg={3} md={6} xs={12}>
-                      <Card style={{height:'calc(100% - 2.2rem)'}}>
-                        <CardBody>
-                          <CardTitle tag="h6">Ongoing Orders</CardTitle>
-                          <small>
-                            In create an order , you can create fresh orders (Bookings & regular orders) 
-                          </small>
-                         
-                          </CardBody>
-                          <CardFooter className='bg-white'>
-                          <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              GO
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </Col>
-                      <Col lg={3} md={6} xs={12}>
-                      <Card style={{height:'calc(100% - 2.2rem)'}}>
-                        <CardBody>
-                          <CardTitle tag="h6"> Closed Orders</CardTitle>
-                          <small>
-                           As Closed orders shows all the orders which completed orders.
-                            </small>
-                         
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Loan Amount</CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.loan_amount} LKR`}</h2>
                           </CardBody>
                           <br />
-                          <br />
-                          <CardFooter className='bg-white'>
-                          <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              GO
-                            </Button>
-                          </CardFooter>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Used Amount</CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.used_amount} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Loan Balance</CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.loan_amount * 1 - this.state.loan.used_amount * 1} LKR`}</h2>
+                          </CardBody>
                         </Card>
                       </Col>
                   </Row>
-             
+                  <Row className='pt-1'>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Due Loan </CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.loan_amount} LKR`}</h2>
+                          </CardBody>
+                          <br />
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Payment Balance</CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.used_amount} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Due Balance</CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.loan_amount * 1 - this.state.loan.used_amount * 1} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                  </Row>
+                  <hr />
+                  <Row className='pt-1'>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Total Loan Installments </CardTitle>
+                            <h2>{this.state.loan && `${this.state.loan.loan_installment_type}`}</h2>
+                          </CardBody>
+                          <br />
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Paid Installments</CardTitle>
+                            <h2>{0}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Due Installments</CardTitle>
+                            <h2>{0}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                  </Row>
                   <Row>
                     <Col lg={12}>
                     <Card>
@@ -453,7 +352,7 @@ class Dashboard extends React.Component {
                           </CardBody>
                           <CardFooter className='bg-white'>
                           <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              GO
+                              make a payment
                             </Button>
                           </CardFooter>
                         </Card>

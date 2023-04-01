@@ -57,7 +57,7 @@ export function loginUser(creds) {
     if (creds.email.length > 0 && creds.password.length > 0) {
       console.log('log');
       axios
-        .post(getSource() + "/oauth/token", {
+        .post(getSource() + "/auth/", {
             user:{
             username: creds.email,
             password: creds.password,
@@ -74,6 +74,9 @@ export function loginUser(creds) {
             localStorage.setItem("user", JSON.stringify(response.data.payload.user));
             window.location.reload(true);
           }
+        })
+        .catch((err) => {
+          alert('invalid credencials')
         });
     } else {
       dispatch(loginError("Something was wrong. Try again"));

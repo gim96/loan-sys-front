@@ -15,126 +15,143 @@ import Widget from "../../components/Widget/Widget.js";
 import Footer from "../../components/Footer/Footer.js";
 import Login from "../login/Login.js";
 
-import loginImage from "../../assets/registerImage.svg";
-import SofiaLogo from "../../components/Icons/SidebarIcons/SofiaLogo.js";
-import GoogleIcon from "../../components/Icons/AuthIcons/GoogleIcon.js";
-import TwitterIcon from "../../components/Icons/AuthIcons/TwitterIcon.js";
-import FacebookIcon from "../../components/Icons/AuthIcons/FacebookIcon.js";
-import GithubIcon from "../../components/Icons/AuthIcons/GithubIcon.js";
-import LinkedinIcon from "../../components/Icons/AuthIcons/LinkedinIcon.js";
-import { registerUser } from "../../actions/register.js";
+import { Divider } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getSource } from "../db/server.js";
 
-class Register extends React.Component {
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-  };
+export default function Register() {
 
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      email: '',
-      password: '',
-    };
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [dob, setDob] = useState('');
 
-    this.changeEmail = this.changeEmail.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-    this.doRegister = this.doRegister.bind(this);
-  }
+  const [loanAmount, setLoanAmount] = useState(0);
 
-  changeEmail(event) {
-    this.setState( { email: event.target.value });
-  }
+   useEffect(() => {
+    
+   }, [])
 
-  changePassword(event) {
-    this.setState({ password: event.target.value });
-  }
+   const handleRegister = () => {
+      const user = {
+        username,
+        password,
+        full_name:fullName,
+        dob, 
+        role:'customer'
+      }
 
-  doRegister(e) {
-    e.preventDefault();
-    this.props.dispatch(registerUser({
-      creds: {
-        email: this.state.email,
-        password: this.state.password,
-      },
-      history: this.props.history
-    }));
-  }
+      
+      const loan = {
+        loan_amount:loanAmount,
+        used_amount:0,
+        loan_installment_type:'3 Months installments'
+      }
+      
+      if (username.length > 0 && password.length > 0 && fullName.length > 0 && dob.length > 0 && loanAmount.toString().length > 0) {
 
-  render() {
-    const { from } = this.props.location.state || { from: { pathname: '/app' } };
+        axios.post(`${getSource()}/users/`, user)
+        .then((resp) => {
 
-    if (Login.isAuthenticated(JSON.parse(localStorage.getItem('authenticated')))) {
-      return (
-        <Redirect to={from} />
-      );
-    }
+          const userId = resp.data.user_id
+
+          axios.post(`${getSource()}/loans/`, { ...loan, user_id:userId})
+          .then((res) => {
+              alert('registration was succeeded.!')
+              window.location.href = '/#/login'
+          })
+          .catch((er) => {
+            console.log(er)
+            alert('somthing went wrong')
+          })
+
+        })
+        .catch((err) => {
+           alert('something went wrong.!')
+        })
+
+      } else {
+        alert('required fields.!')
+      }
+   }
 
     return (
       <div className="auth-page">
-        <Container className="col-12">
+        <Container className="col-12 p-4">
           <Row className="d-flex align-items-center">
-            <Col xs={12} lg={6} className="left-column">
+            <Col xs={12} lg={12} className="left-column">
               <Widget className="widget-auth widget-p-lg">
                 <div className="d-flex align-items-center justify-content-between py-3">
-                  <p className="auth-header mb-0">Sign Up</p>
-                  <div className="logo-block">
-                    <SofiaLogo />
-                    <p className="mb-0">SOFIA</p>
-                  </div>
+                  <p className="auth-header mb-0">Customer Registation</p>
+       
                 </div>
                 <div className="auth-info my-2">
-                  <p>This is a real app with Node.js backend - use <b>"admin@flatlogic.com / password"</b> to login!</p>
+                  <p>Let's bigin your finacial journey</p>
                 </div>
-                <form onSubmit={this.doRegister}>
+                <form>
+                  <small>Personal details</small>
+                  <Divider />
                   <FormGroup className="my-3">
-                    <FormText>Email</FormText>
-                    <Input id="email" className="input-transparent pl-3" value={this.state.email} onChange={this.changeEmail} type="email" required name="email" placeholder="Henry Monk" />
+                    <FormText>Username</FormText>
+                       <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} />
                   </FormGroup>
                   <FormGroup  className="my-3">
                     <div className="d-flex justify-content-between">
                       <FormText>Password</FormText>
-                      <Link to="/error">Forgot password?</Link>
-                    </div>
-                    <Input id="password" className="input-transparent pl-3" value={this.state.password} onChange={this.changePassword} type="password" required name="password" placeholder="Place your password here"/>
+                    </div>  
+                    <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} />
                   </FormGroup>
+                  <FormGroup className="my-3">
+                    <FormText>Full Name</FormText>
+                    <input type="text" className="form-control" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                  </FormGroup>
+                  <FormGroup className="my-3">
+                    <FormText>Date of Birth</FormText>
+                    <input type="date" className="form-control" value={dob} onChange={(e) => setDob(e.target.value)} />
+                  </FormGroup>
+                  <br />
+                  <small>Loan Details</small>
+                  <Divider />
+
+                  <FormGroup className="my-3">
+                    <FormText>Loan Amount</FormText>
+                    <select value={loanAmount} className='form-control' onChange={(e) => setLoanAmount(e.target.value)}>
+                    <option value="">Select a number</option>
+                    <option value="1000">1,000</option>
+                    <option value="2000">2,000</option>
+                    <option value="3000">3,000</option>
+                    <option value="4000">4,000</option>
+                    <option value="5000">5,000</option>
+                    <option value="6000">6,000</option>
+                    <option value="7000">7,000</option>
+                    <option value="8000">8,000</option>
+                    <option value="9000">9,000</option>
+                    <option value="10000">10,000</option>
+                    <option value="11000">11,000</option>
+                    <option value="12000">12,000</option>
+                    <option value="13000">13,000</option>
+                    <option value="14000">14,000</option>
+                    <option value="15000">15,000</option>
+                    </select>
+                  </FormGroup>
+
                   <div className="bg-widget d-flex justify-content-center">
-                    <Button className="rounded-pill my-3" type="submit" color="secondary-red">Sign Up</Button>
+                    <Button className="rounded-pill my-3" type="button" color="secondary-red" onClick={handleRegister}>Sign Up</Button>
                   </div>
-                  <p className="dividing-line my-3">&#8195;Or&#8195;</p>
-                  <div className="d-flex align-items-center my-3">
-                    <p className="social-label mb-0">Login with</p>
-                    <div className="socials">
-                      <a href="https://flatlogic.com/"><GoogleIcon /></a>
-                      <a href="https://flatlogic.com/"><TwitterIcon /></a>
-                      <a href="https://flatlogic.com/"><FacebookIcon /></a>
-                      <a href="https://flatlogic.com/"><GithubIcon /></a>
-                      <a href="https://flatlogic.com/"><LinkedinIcon /></a>
-                    </div>
-                  </div>
-                  <Link to="/login">Enter the account</Link>
+                
+              
+                  <Link to="/login" className="text-center">Login with existing account</Link>
                 </form>
               </Widget>
             </Col>
-            <Col xs={0} lg={6} className="right-column">
-              <div>
-                <img src={loginImage} alt="Error page" />
-              </div>
-            </Col>
+          
           </Row>
         </Container>
         <Footer />
       </div>
     )
   }
-}
 
-function mapStateToProps(state) {
-  return {
-    isFetching: state.auth.isFetching,
-    isAuthenticated: state.auth.isAuthenticated,
-    errorMessage: state.auth.errorMessage,
-  };
-}
 
-export default withRouter(connect(mapStateToProps)(Register));

@@ -38,8 +38,8 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
+      email: "admin",
+      password: "123",
     };
 
     this.doLogin = this.doLogin.bind(this);
@@ -75,48 +75,21 @@ class Login extends React.Component {
 
     return (
       <div className="auth-page">
-        <Container className="col-12">
+        <Container className="col-12 pt-5">
+          
+          <h4 style={{textAlign:'center'}}>Loan offering system & Buy Items</h4>
           <Row className="d-flex align-items-center">
-            <Col xs={12} lg={7} md={7} className="right-column bg-dark">
-              <div  style={{ verticleAlign: "top" }}>
-                <img src={logo} alt='logo' />
-                <table align='center'>
-                  <tr>
-                    <td className="text-left text-light">
-                      
-                       Welcome to Sanjaya Proffessionals tailors.!
-                    
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </Col>
-            <Col xs={12} lg={5} md={5} className="left-column">
+           
+            <Col xs={12} lg={12} md={12} className="left-column">
               <Widget className="widget-auth widget-p-lg ">
                 <div className="d-flex align-items-center justify-content-between py-3">
-                  <p className="auth-header mb-0">Login</p>
+                  <p className="auth-header mb-0" >Login</p>
                   <div className="logo-block">
                     {/* <SofiaLogo /> */}
                     <p className="mb-0"> </p>
                   </div>
                 </div>
-                <table align="center">
-                  <tr>
-                    <td>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="64"
-                        height="64"
-                        fill="currentColor"
-                        class="bi bi-person-square"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z" />
-                      </svg>
-                    </td>
-                  </tr>
-                </table>
+              
 
                 <form>
                   <FormGroup className="my-3">
@@ -135,7 +108,6 @@ class Login extends React.Component {
                   <FormGroup className="my-3">
                     <div className="d-flex justify-content-between">
                       <FormText>Password</FormText>
-                      {/* <Link to="/error">Forgot password?</Link> */}
                     </div>
                     <Input
                       id="password"
@@ -162,10 +134,12 @@ class Login extends React.Component {
                   </div>
                   <br />
                 </form>
+                
               </Widget>
             </Col>
           </Row>
         </Container>
+        <a href="/register" style={{textAlign:'center'}}>Register</a>
         <Footer />
       </div>
     );
