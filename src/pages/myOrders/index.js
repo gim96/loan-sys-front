@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OngoingOrders = function () {
+const MyOrders = function () {
 
 
   const[orders, setOrders] = useState([]);
@@ -62,28 +62,15 @@ const OngoingOrders = function () {
 
   async function getData() {
     //  console.log(moment(new Date()).format('YYYY-MM-DD'))
-    axios.get(`${getSource()}/orders/pending?page=1&limit=20`, token_header)
+    axios.get(`${getSource()}/orders`)
     .then((resp) => {
-        setOrders(resp.data.payload);
-        setAllOrders(resp.data.payload);
-      
+        setOrders(resp.data);
+        setLoading(false)
     })  
     .catch((err) => {
         console.log(err);
     })
 
-    axios.get(`${getSource()}/orders/ids?type=ongoing`, token_header)
-    .then((resp) => {
-        let arr = []
-        resp.data.payload.map((data) => {
-            arr.push(data.orderId)
-        })
-        setOrderIds(arr);
-        setLoading(false);
-    })  
-    .catch((err) => {
-        console.log(err);
-    })
    
   };
 
@@ -91,12 +78,6 @@ const OngoingOrders = function () {
     getData();
   }, []);
 
-// const _handleTextFieldItems = (e) => {
-//     const currCode = e.target.value;
-//     const selItem =  allOrders.filter((order) => order.orderId === currCode);
-//     setSelectedItem(selItem);
-//     setCodeSearch(currCode);
-// };
 
 const handleCurrentItem = (item) => {
     setCurrentOrder(item)
@@ -360,4 +341,4 @@ const handleSearchByDate = () => {
     );
 };
 
-export default OngoingOrders;
+export default MyOrders;

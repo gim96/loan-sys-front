@@ -61,6 +61,7 @@ const OngoingOrders = function () {
   const [orderIds, setOrderIds] = useState([])
   const [selectedId, setSelectedId] = useState('')
   const [customerData, setCustomerData] = useState([])
+  const [cart, setCart] = useState([])
 
   const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD')) 
   const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
@@ -78,7 +79,9 @@ const [stockItem, setStockItem] = useState([]);
         setLoading(false)
     })  
     .catch((err) => {
-        console.log(err);
+        console.log(err.status)
+        // alert('something went wrong product list')
+        // console.log(err);
     })
 
 
@@ -107,6 +110,8 @@ const handleCurrentItem = (item) => {
     setOpenEdit(true);
    
 };
+
+
 
 const handleView = () => {
     setOpenView(true);
@@ -245,10 +250,6 @@ const toggle = () => setDropdownOpen((prevState) => !prevState);
                 openView={openView} 
                 setOpenView={setOpenView} 
                 handleView={handleView}
-                stockItem={stockItem && stockItem}
-                currentOrder={currentOrder}
-                customerData={customerData}
-                setOpenEdit={setOpenEdit}
             />
             <EditModal 
                 openEdit={openEdit} 

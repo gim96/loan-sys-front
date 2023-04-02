@@ -139,10 +139,11 @@ const getPageData = (number) => {
                           <label for="checkbox100"/>
                         </div>
                       </th>
-                      <th className="w-25">Name</th>
-                      <th className="w-25">Phone</th>
-                      <th className="w-25">Address</th>
-                      <th className="w-25">Actions</th>
+                      {/* <th className="w-5">Name</th> */}
+                      <th className="w-15">user ID</th>
+                      <th className="w-25">Username</th>
+                      <th className="w-25">dob</th>
+                      <th className="w-20">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -152,15 +153,14 @@ const getPageData = (number) => {
                         <tr key={uuidv4()}>
                           <td>
                             <div className="checkbox checkbox-primary">
-                              {currentPage < 2 ? i+1 : (i + 1 + 20 * currentPage - 20)}
+                              {i+1}
                             </div>
                           </td>
-                          <td className="d-flex align-items-center">
-                              <img className={s.image} src={avatar} alt="User"/>
-                              <span className="ml-3">{item.name}</span>
+                          <td >
+                              {item.user_id}
                           </td>
-                          <td>{item.phone}</td>
-                          <td>{item.address}</td>
+                          <td>{item.username}</td>
+                          <td>{item.dob}</td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleShow(i)}>
                                 <VisibilityIcon fontSize="inherit" />
@@ -176,73 +176,8 @@ const getPageData = (number) => {
                       ))}
                     </tbody>
                   </Table>
-                  <table width="100%" className='float-right'>
-                    <tr>
-                      <td width="50%">
-                        {currentPage} Page(s) of {pageCount.length}
-                      </td>
-                      <td width="40%" align="right">
-                        {/* <nav aria-label="Page navigation example"> */}
-                        <ul class="pagination">
-                          <li>
-                            <button
-                              class="page-link"
-                              aria-label="Previous"
-                              onClick={prePage}
-                            >
-                              <span aria-hidden="true">&laquo;</span>
-                              <span class="sr-only">Previous</span>
-                            </button>
-                          </li>
-                          {pageCount.map((data) => (
-                            <li > 
-                              <button
-                                class={"page-link"}
-                                onClick={() => getPageData(data)}
-                              >
-                                {data}
-                              </button>
-                            </li>
-                          ))}
-
-                          <li>
-                            <button
-                              class="page-link"
-                              onClick={nextPage}
-                              aria-label="Next"
-                            >
-                              <span aria-hidden="true">&raquo;</span>
-                              <span class="sr-only">Next</span>
-                            </button>
-                          </li>
-                        </ul>
-                        {/* </nav> */}
-                      </td>
-                    </tr>
-                  </table>
-                  {/* <Pagination className="pagination-borderless" aria-label="Page navigation example">
-                    <PaginationItem disabled={firstTableCurrentPage <= 0}>
-                      <PaginationLink
-                        onClick={e => setFirstTablePage(e, firstTableCurrentPage - 1)}
-                        previous
-                        href="#top"
-                      />
-                    </PaginationItem>
-                    {[...Array(firstTablePagesCount)].map((page, i) =>
-                      <PaginationItem active={i === firstTableCurrentPage} key={i}>
-                        <PaginationLink onClick={e => setFirstTablePage(e, i)} href="#top">
-                          {i + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )}
-                    <PaginationItem disabled={firstTableCurrentPage >= firstTablePagesCount - 1}>
-                      <PaginationLink
-                        onClick={e => setFirstTablePage(e, firstTableCurrentPage + 1)}
-                        next
-                        href="#top"
-                      />
-                    </PaginationItem>
-                  </Pagination> */}
+                 
+                
                 </div>
               {/* </Widget> */}
             </Col>

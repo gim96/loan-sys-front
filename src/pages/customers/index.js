@@ -50,27 +50,11 @@ const Customers = function () {
 
   async function getData() {
 
-    axios.get(`${getSource()}/customers/active-count`, token_header)
-    .then((resp) => {
-        setActiveCount(resp.data.payload.count);
-    })  
-    .catch((err) => {
-        console.log(err);
-    })
-
-    axios.get(`${getSource()}/customers/active-phone`, token_header)
-    .then((resp) => {
-        setActivePhone(resp.data.payload);
-    })  
-    .catch((err) => {
-        console.log(err);
-    })
-
-    axios.get(`${getSource()}/customers/active?page=1&limit=20`, token_header)
+    axios.get(`${getSource()}/users/get-customers`)
     .then((resp) => {
         console.log(resp);
-        setCustomers(resp.data.payload);
-        setAllCustomers(resp.data.payload);
+        setCustomers(resp.data);
+        setAllCustomers(resp.data);
         setLoading(false);
     })  
     .catch((err) => {
@@ -165,39 +149,7 @@ const handleDelete = () => {
 
     return (
         <div>
-             <Row>
-                <Col lg={12} md={12} xs={12}>
-                    <Card className="p-3 pl-3">
-                        <Row>
-                            <Col lg={4} md={4} xs={12} className="pt-4">Filter</Col>
-                            <Col lg={2} md={2} xs={2}></Col>
-                            <Col lg={4} md={4} xs={12} align='right'>
-                                <Autocomplete
-                                    id="free-solo-demo"
-                                    freeSolo
-                                    options={activePhone.map((option) => option)}
-                                    renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Phone No"
-                                        margin="normal"
-                                        variant="outlined"
-                                        placeholder="Search by Phone no"
-                                        onSelect={_handleTextFieldCustomers}
-                                        on
-                                    />
-                                    )}
-                                />
-                            </Col>
-                            <Col lg={2} md={2} xs={2} className="pt-3">
-                                <Button className='p-3 float-center' color='primary' onClick={handleSearch}>
-                                    search
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Card>
-                </Col>
-            </Row>  
+
             <br />    
             <Row>
                 <Col>
@@ -215,7 +167,6 @@ const handleDelete = () => {
                                             activeCount={activeCount}
                                             setOpenCreate={setOpenCreate}
                                             handleView={handleView}
-                                            // handleCreate
                                         />
                                     </div>
                                     <br />

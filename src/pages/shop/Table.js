@@ -38,7 +38,7 @@ const [selectedItem, setSelectedItem] = useState([]);
 
 useEffect(() => {
     if (products) {
-      console.log(products)
+     
     }
 }, [products])
 
@@ -73,15 +73,17 @@ useEffect(() => {
  };    
 
  const addToCart = (i) => {
+
   const productId = products[i].product_id
   const userId = JSON.parse(localStorage.getItem('user')).id
 
   axios.post(`${getSource()}/carts/`, {product_id:productId, user_id:userId})
   .then((resp) => {
-    console.log(resp)
+    alert('item added to card.!')
   })
   .catch((err) => {
     console.log(err)
+    // alert('Current Loan has balance exceed.!')
   })
  }
 

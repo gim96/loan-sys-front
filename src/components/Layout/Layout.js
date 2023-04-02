@@ -9,8 +9,8 @@ import Footer from "../Footer/Footer.js";
 import Breadcrumbs from "../Breadbrumbs/Breadcrumbs.js";
 
 import Dashboard from "../../pages/dashboard/Dashboard.js";
-import CreateOrder from "../../pages/create_order/CreateOrder.js";
-import Bill from "../../pages/create_order/Bill.js";
+// import CreateOrder from "../../pages/create_order/CreateOrder.js";
+// import Bill from "../../pages/create_order/Bill.js";
 // import Notifications from "../../pages/notifications/ClosedOrders.js";
 // import Tables from "../../pages/tables/PendingOrders.js";
 // import ViewOrder from "../../pages/reports/ViewOrder.js.js";
@@ -25,7 +25,7 @@ import ClosedOrders from "../../pages/closedOrders/index.js";
 import Expenses from "../../pages/expenses/index.js";
 import Customers from "../../pages/customers/index.js";
 import Suppliers from "../../pages/suppliers/index.js";
-import OngoingOrders from "../../pages/Ongoing_orders/index.js";
+import MyOrders from "../../pages/myOrders/index.js";
 import BookingOrders from "../../pages/shop/index.js";
 
 class Layout extends React.Component {
@@ -53,14 +53,14 @@ class Layout extends React.Component {
                 render={() => <Redirect to="menu/dashboard" />}
               />
               <Route path="/menu/dashboard" exact component={Dashboard} />
-              <Route path="/menu/createOrder" exact component={CreateOrder} />
-              <Route path="/menu/bill" exact component={Bill} />
+              {/* <Route path="/menu/createOrder" exact component={CreateOrder} /> */}
+              {/* <Route path="/menu/bill" exact component={Bill} /> */}
               <Route path="/menu/items/" exact component={Items} />
               <Route path="/menu/stock" exact component={Stocks} />
               <Route path="/menu/closed-orders" exact component={ClosedOrders} />
               <Route path="/menu/customers" exact component={Customers} />
               <Route path="/menu/suppliers" exact component={Suppliers} />
-              <Route path="/menu/ongoing-orders" exact component={OngoingOrders} />
+              <Route path="/menu/my-orders" exact component={MyOrders} />
               <Route path="/menu/shop" exact component={BookingOrders} />
               {/* <Route
                 path="/menu/viewOrder/:orderId"
