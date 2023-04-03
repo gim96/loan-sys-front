@@ -19,7 +19,7 @@ import Icons from "../../pages/uielements/icons/IconsPage.js";
 import Maps from "../../pages/uielements/maps/google/GoogleMapPage";
 
 import s from "./Layout.module.scss";
-import Items from "../../pages/items/index.js";
+import Products from "../../pages/products/index.js";
 import Stocks from "../../pages/stock/index.js";
 import ClosedOrders from "../../pages/closedOrders/index.js";
 import Expenses from "../../pages/expenses/index.js";
@@ -55,7 +55,7 @@ class Layout extends React.Component {
               <Route path="/menu/dashboard" exact component={Dashboard} />
               {/* <Route path="/menu/createOrder" exact component={CreateOrder} /> */}
               {/* <Route path="/menu/bill" exact component={Bill} /> */}
-              <Route path="/menu/items/" exact component={Items} />
+              <Route path="/menu/products/" exact component={Products} />
               <Route path="/menu/stock" exact component={Stocks} />
               <Route path="/menu/closed-orders" exact component={ClosedOrders} />
               <Route path="/menu/customers" exact component={Customers} />

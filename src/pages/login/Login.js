@@ -133,13 +133,14 @@ class Login extends React.Component {
                     <br />
                   </div>
                   <br />
+                  <a href="/#/register" style={{textAlign:'center'}}> Didn't have an account ? Register here !</a>
                 </form>
                 
               </Widget>
             </Col>
           </Row>
         </Container>
-        <a href="/register" style={{textAlign:'center'}}>Register</a>
+     
         <Footer />
       </div>
     );

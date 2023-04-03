@@ -26,15 +26,33 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [dob, setDob] = useState('');
+  const [dob, setDob] = useState(new Date());
 
   const [loanAmount, setLoanAmount] = useState(0);
 
+   
+   const validateDOB = () => { 
+    const currDate = new Date().getFullYear()
+    console.log(currDate)
+    // var month_diff = Date.now() - dob.getTime();  
+    // console.log(month_diff)
+      
+    // var age_dt = new Date(month_diff);   
+    // console.log(age_dt)
+    // var year = age_dt.getUTCFullYear();  
+    // console.log(year)
+
+    // var age = Math.abs(year - dob.split("-")[0] * 1)
+    // console.log(age)
+   }
+
    useEffect(() => {
-    
+    validateDOB()
    }, [])
 
+
    const handleRegister = () => {
+
       const user = {
         username,
         password,
@@ -52,25 +70,35 @@ export default function Register() {
       
       if (username.length > 0 && password.length > 0 && fullName.length > 0 && dob.length > 0 && loanAmount.toString().length > 0) {
 
-        axios.post(`${getSource()}/users/`, user)
-        .then((resp) => {
+        const diffAge = (new Date().getFullYear()).toString() * 1 -  dob.toString().split("-")[0] * 1
 
-          const userId = resp.data.user_id
+        if (diffAge > 18) {
 
-          axios.post(`${getSource()}/loans/`, { ...loan, user_id:userId})
-          .then((res) => {
-              alert('registration was succeeded.!')
-              window.location.href = '/#/login'
+          axios.post(`${getSource()}/users/`, user)
+          .then((resp) => {
+  
+            const userId = resp.data.user_id
+  
+            axios.post(`${getSource()}/loans/`, { ...loan, user_id:userId})
+            .then((res) => {
+                alert('registration was succeeded.!')
+                window.location.href = '/#/login'
+            })
+            .catch((er) => {
+              console.log(er)
+              alert('somthing went wrong')
+            })
+  
           })
-          .catch((er) => {
-            console.log(er)
-            alert('somthing went wrong')
+          .catch((err) => {
+             alert('something went wrong.!')
           })
 
-        })
-        .catch((err) => {
-           alert('something went wrong.!')
-        })
+        } else {
+          alert('Age must be grater than 18')
+        }
+
+       
 
       } else {
         alert('required fields.!')
