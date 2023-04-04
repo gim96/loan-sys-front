@@ -7,6 +7,8 @@ import {
   Pagination,
   PaginationItem,
   PaginationLink,
+  Button,
+  Badge,
 } from "reactstrap";
 
 import cloudIcon from "../../assets/tables/cloudIcon.svg";
@@ -25,80 +27,87 @@ import mock from "./mock.js";
 import axios from "axios";
 import { getSource } from "../db/server";
 import {token_header} from "../../utils/tokenHeader";
-import moment from "moment";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Items from ".";
+import { Skeleton } from "@mui/material";
 
-const Tables = function ({handleCurrentItem, setOpenCreate, setOpenView}) {
+const Tables = function ({ setOpenCreate, setOpenView, handleCurrentItem }) {
 
-  const [orders, setOrders] = useState([])
+const [loans, setLoans] = useState([]); 
+const [selectedLoan, setSelectedLoan] = useState([])
 
-async function getData() {
+  const handleView = (i) => {
+    handleCurrentItem(loans[i], 'view')
+  }
 
-  axios.get(`${getSource()}/orders/get-orders-data-with-user-data`)
-  .then((resp) => {
+  useEffect(() => {
+    axios.get(`${getSource()}/loans`)
+    .then((resp) => {
       console.log(resp.data)
-      setOrders(resp.data);
-
-  })  
-  .catch((err) => {
-      console.log(err);
-  })
- 
-};
-
-useEffect(() => {
-  getData();
-}, []);
-
-
-
-const handleView = (i) => {
-
-}
+      setLoans(resp.data)
+    })
+    .catch((err) => {
+      alert('something went wrong when retreving data')
+    })
+  }, [])
 
   const handleEdit = (i) => {
-    handleCurrentItem(orders[i], 'edit')
+    handleCurrentItem(loans[i], 'edit')
   }; 
   
   const handleDelete = (i) => {
-    handleCurrentItem(orders[i], 'edit')
+    handleCurrentItem(loans[i], 'delete')
  };    
 
+
   return (
-    <div className="pt-3">
-      <Row >
+    <div>
+      { loans &&
+      <Row>
         <Col>
           <Row className="mb-4">
             <Col>
+              {/* <Widget> */}
+                <div className={s.tableTitle}>
+                 
+                 
+                </div>
                 <div className="widget-table-overflow">
                   <Table className={`table-striped table-borderless table-hover ${s.statesTable}`} responsive>
                     <thead className='border'>
                     <tr>
                       <th className={`${s.checkboxCol}`}></th>
-                      <th className="w-5">P_ID</th>
-                      
+                      <th className="w-5">Loan ID</th>
+                      <th className="w-10">Loan Amount</th>
+                      <th className="w-5">Customer ID</th>
+                      <th className="w-5">Used Amount</th>
+                      <td className="w-10">Balance</td>
+                      <th className="w-5">Installments</th>
+                      <th className="w-5"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {orders && orders.length > 0 && orders
-                      .map((order, i) => (
+                    {loans && loans.length > 0 && loans
+                      .map((loan, i) => (
                        
                         <tr key={uuidv4()}>
                           <td>
                             <div className="checkbox checkbox-primary">{i + 1}</div>
                           </td>
-                          <td>{order.order_id}</td>
-                          <td>{order.user_id}</td>
-                          <td className="text-right">{order.price}</td>
-                          <td className="text-right">{order.username}</td>
+                          <td>{loan.loan_id}</td>
+                          <td className="text-right">{loan.loan_amount}.00</td>
+                          <td>{loan.user_id} </td>
+                          <td className="text-right">{loan.used_amount}.00</td>
+                         
+                          <td className="text-right">{loan.loan_amount * 1 - loan.used_amount * 1}.00</td>
+                          <td className="text-right">{loan.loan_installment_type}</td>
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>
                                 <VisibilityIcon fontSize="inherit" />
                             </IconButton>
                             {/* <IconButton aria-label="delete" size="large" onClick={() => handleEdit(i)}>
                                 <EditIcon fontSize="inherit" />
-                            </IconButton>
-                            <IconButton aria-label="delete" size="large" onClick={() => handleDelete(i)}>
+                            </IconButton> */}
+                            {/* <IconButton aria-label="delete" size="large" onClick={() => handleDelete(i)}>
                                 <DeleteIcon fontSize="inherit" />
                             </IconButton> */}
                           </td>
@@ -115,6 +124,10 @@ const handleView = (i) => {
         </Col>
       </Row>
       
+      ||
+
+       <Skeleton height={250} />
+      }
     </div>
   )
 }

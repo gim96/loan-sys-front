@@ -74,26 +74,13 @@ const [selectedProduct, setSelectedProduct] = useState([])
                   <Table className={`table-striped table-borderless table-hover ${s.statesTable}`} responsive>
                     <thead className='border'>
                     <tr>
-                      <th className={`${s.checkboxCol}`}>
-                        <div className="checkbox checkbox-primary">
-                          <input
-                            className="styled"
-                            id="checkbox100"
-                            type="checkbox"
-                          />
-                          <label for="checkbox100"/>
-                        </div>
-                      </th>
-                     
+                      <th className={`${s.checkboxCol}`}></th>
                       <th className="w-5">P_ID</th>
                       <th className="w-10">Title</th>
-                      <th className="w-5">
-                        
-                      </th>
+                      <th className="w-5"> </th>
                       <th className="w-5">Category</th>
-                      <th className="w-5">Brand</th>
                       <td className="w-10">Price</td>
-                     
+                      <th className="w-5"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,19 +89,15 @@ const [selectedProduct, setSelectedProduct] = useState([])
                        
                         <tr key={uuidv4()}>
                           <td>
-                            <div className="checkbox checkbox-primary">
-                              {i + 1}
-                            </div>
+                            <div className="checkbox checkbox-primary">{i + 1}</div>
                           </td>
-                          <td>
-                            {product.product_id}
-                          </td>
+                          <td>{product.product_id}</td>
                           <td>{product.title && product.title.length > 10 ? `${product.title.substring(0,10)}...` : product.title }</td>
                           <td>
                           <img src={product.thumbnail} width='50px' height='50px' style={{objectFit:'cover'}} />
                           </td>
                           <td>{product.category}</td>
-                          <td>{product.brand}</td>
+                          <td className="text-right">{product.price}.00</td>
                        
                           <td>
                             <IconButton aria-label="delete" size="large" onClick={() => handleView(i)}>

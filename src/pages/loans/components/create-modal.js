@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, Spinner} from "reactstrap";
+import { Card, Col, Input, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, Spinner } from "reactstrap";
 import EditIcon from '@mui/icons-material/Edit';
-import axios from "axios";
+// import axios from "axios";
 import { getSource } from "../../db/server";
 import { token_header } from "../../../utils/tokenHeader";
-import { SketchPicker } from 'react-color';
-import Select from 'react-select';
+import firebase from "../../db/firebase";
+import {SketchPicker} from "react-color";
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import axios from "axios";
 
-export default function EditModal({
-  openEdit, setOpenEdit, selectedItem}) {
+export default function CreateModal({openCreate, setOpenCreate, handleCreate}) {
 
     const [product, setProduct] = useState({
       title:'',
@@ -20,50 +20,31 @@ export default function EditModal({
       thubmnail:''
     })
 
-
-
-    useEffect(() => {
-        if (selectedItem) {
-          setProduct({
-            title:selectedItem.title,
-            brand:selectedItem.brand,
-            category:selectedItem.category,
-            price:selectedItem.price * 1,
-            thubmnail:selectedItem.thumbnail
-          })
-        }
-    }, [selectedItem])
-
     const handleSave = () => {
-      console.log(product)
-      axios.put(`${getSource()}/products/${selectedItem.product_id}`, product)
+     
+      axios.post(`${getSource()}/products/`)
       .then((resp) => {
-        console.log(resp)
-          alert('product updated.!')
-          setOpenEdit(false)
+          alert('product added.!')
+          setOpenCreate(false)
+          window.location.reload(true)
       })
       .catch((err) => {
-        console.log(err)
         alert('something went wrong.!')
       })
 
     };
 
 
-
     return(
-        <Modal size='md' isOpen={openEdit}>
-        <ModalHeader toggle={() => setOpenEdit(false)}>
-          <EditIcon />&nbsp; Edit Item details
-        </ModalHeader>
-        <ModalBody className="p-5">
-        
-          <Row>
+        <Modal size='md' isOpen={openCreate}>
+            <ModalHeader toggle={() => setOpenCreate(false)}><EditIcon />&nbsp; Add Product details</ModalHeader>
+            <ModalBody className="p-5" > 
+            <Row>
                 <Col >
                    
                     Title
-                    <Input type="text" 
-                    onChange={(e) => setProduct({...product, title:e.target.value})} value={product.title} />
+                    <Input type="textarea" 
+                    onChange={(e) => setProduct({...product, title:e.target.value})} value={product.tile} />
                     <br />
                     Category
                     <Input type="text" onChange={(e) => setProduct({...product, category:e.target.value})} value={product.category} />
@@ -80,15 +61,19 @@ export default function EditModal({
                 </Col>
                 
             </Row>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleSave}>
-            Save
-          </Button>{' '}
-          <Button color="secondary" onClick={() => setOpenEdit(false)}>
-            Cancel
-          </Button>
-        </ModalFooter>
+            <hr />
+            <Row>
+                <Col lg={12} align='right'>
+                  <Button color="primary" onClick={handleSave}>
+                    Save
+                  </Button>{' '}
+                
+                  <Button color="secondary" onClick={() => setOpenCreate(false)}>
+                    Cancel
+                  </Button>
+                </Col>
+            </Row>
+          </ModalBody>
       </Modal>
     );
 };

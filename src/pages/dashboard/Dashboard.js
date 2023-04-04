@@ -1,9 +1,5 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Card, CardHeader, CardBody, Col, Row, CardSubtitle, CardTitle, CardText, Button, CardFooter } from "reactstrap";
-import Widget from "../../components/Widget/Widget.js";
-import ApexActivityChart from "./components/ActivityChart.js";
-import ReactApexChart from "react-apexcharts";
 import {token_header} from "../../utils/tokenHeader";
 // import {token_header} from "../.."
 import meal1 from "../../assets/dashboard/meal-1.svg";
@@ -13,17 +9,17 @@ import { getSource } from "../../pages/db/server";
 import axios from "axios";
 import moment from "moment";
 
-import CheckroomIcon from '@mui/icons-material/Checkroom';
-
-
-import s from "./Dashboard.module.scss";
-
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      loan:[]
+      loan:[],
+      loans:[],
+      totalLoanAmount:0,
+      totalUsedLoan:0,
+      totalLoanBalance:0,
+      totalCustomers:0
     };
   }
 
@@ -33,13 +29,39 @@ class Dashboard extends React.Component {
   getData() {
     if (JSON.parse(localStorage.getItem('user')).role === 'customer') {
         const user_id = JSON.parse(localStorage.getItem('user')).id
-        axios.get(`${getSource()}/loans/get-loan-by-userId/${user_id}`, token_header)
+        axios.get(`${getSource()}/loans/get-loan-by-userId/${user_id}`)
         .then((resp) => {
           this.setState({loan:resp.data})
         })  
         .catch((err) => {
           console.log(err);
         })
+    } else {
+
+      axios.get(`${getSource()}/users/get-customers/`)
+      .then((resp) => {
+       
+        this.setState({totalCustomers:resp.data && resp.data.length})
+      })  
+      .catch((err) => {
+        console.log(err);
+      })
+    
+      axios.get(`${getSource()}/loans/`)
+      .then((resp) => {
+        let loan_amount = 0, used_amount = 0, loan_bal = 0
+        
+        resp.data.map((data) => {
+           loan_amount = loan_amount + data.loan_amount
+           used_amount = used_amount + data.used_amount
+           loan_bal = loan_bal + (loan_amount - used_amount)
+        })
+        
+        this.setState({loans:resp.data, totalLoanAmount:loan_amount, totalUsedLoan:used_amount, totalLoanBalance:loan_bal})
+      })  
+      .catch((err) => {
+        console.log(err);
+      })
     }
     
   }
@@ -63,14 +85,63 @@ class Dashboard extends React.Component {
             JSON.parse(localStorage.getItem('user')).role === 'admin' ? (
               <Row>
               <Col className="pr-grid-col" xs={12} lg={12}>
-                <Row className="gutter mb-4">
-                  <Col className="mb-4 mb-md-0" xs={12} md={2}>
-                    <b>Daily summery</b>
-                  </Col>
-                  <Col className="mb-4 mb-md-0" xs={12} md={10}>
-                    <hr />
-                  </Col>
-                </Row>
+              <h6 className='pl-1'>Loan Details</h6>
+                  <Row className='pt-1'>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6"> Lended Loan Amount</CardTitle>
+                            <h2>{`${this.state.totalLoanAmount} LKR`}</h2>
+                          </CardBody>
+                          <br />
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Used Amount</CardTitle>
+                            <h2>{`${this.state.totalUsedLoan} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Total Loan Balance</CardTitle>
+                            <h2>{`${this.state.totalLoanBalance} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                  </Row>
+                  <br />
+                    <h6 className='pl-1'>Customer Details Details</h6>
+                  <Row className='pt-1'>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">All Customers </CardTitle>
+                            <h2>{`${this.state.totalCustomers}`}</h2>
+                          </CardBody>
+                          <br />
+                        </Card>
+                      </Col>
+                      {/* <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Used Amount</CardTitle>
+                            <h2>{`${this.state.totalUsedLoan} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg={4} md={6} xs={12}>
+                        <Card style={{height:'calc(100% - 2.2rem)'}}>
+                          <CardBody>
+                            <CardTitle tag="h6">Total Loan Balance</CardTitle>
+                            <h2>{`${this.state.totalLoanBalance} LKR`}</h2>
+                          </CardBody>
+                        </Card>
+                      </Col> */}
+                  </Row>
               </Col>
             </Row>
             ) : (
@@ -133,52 +204,8 @@ class Dashboard extends React.Component {
                       </Col>
                   </Row>
                   <hr />
-                  <Row className='pt-1'>
-                      <Col lg={4} md={6} xs={12}>
-                        <Card style={{height:'calc(100% - 2.2rem)'}}>
-                          <CardBody>
-                            <CardTitle tag="h6">Total Loan Installments </CardTitle>
-                            <h2>{this.state.loan && `${this.state.loan.loan_installment_type}`}</h2>
-                          </CardBody>
-                          <br />
-                        </Card>
-                      </Col>
-                      <Col lg={4} md={6} xs={12}>
-                        <Card style={{height:'calc(100% - 2.2rem)'}}>
-                          <CardBody>
-                            <CardTitle tag="h6">Paid Installments</CardTitle>
-                            <h2>{0}</h2>
-                          </CardBody>
-                        </Card>
-                      </Col>
-                      <Col lg={4} md={6} xs={12}>
-                        <Card style={{height:'calc(100% - 2.2rem)'}}>
-                          <CardBody>
-                            <CardTitle tag="h6">Due Installments</CardTitle>
-                            <h2>{0}</h2>
-                          </CardBody>
-                        </Card>
-                      </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={12}>
-                    <Card>
-                        <CardBody>
-                          <CardTitle tag="h6"> Create an Order</CardTitle>
-                          <small>
-                            In create an order , you can create fresh orders (Bookings & regular orders) 
-                            </small>
-                         <br />
-                         <br />
-                          </CardBody>
-                          <CardFooter className='bg-white'>
-                          <Button color='primary' onClick={() => window.location.href = '/#/menu/dashboard'}>
-                              make a payment
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                    </Col>
-                  </Row>
+                
+                
                 </Col>
               </Row>
             )
